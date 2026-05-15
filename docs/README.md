@@ -1,3 +1,3 @@
-# nomallory
+# safe ping
 
-secure chat app in python
+secure workspace and chat app in python
