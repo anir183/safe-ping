@@ -1,0 +1,13 @@
+{
+	"typeCheckingMode": "recommended",
+
+	"reportAny": false,
+	"reportExplicitAny": false,
+	"reportUnknownVariableType": false,
+	"reportUnknownMemberType": false,
+	"reportUnknownArgumentType": false,
+	"reportUnknownLambdaType": false,
+	"reportMissingTypeArgument": false,
+	"reportMissingParameterType": false,
+	"reportUntypedFunctionDecorator": false
+}
