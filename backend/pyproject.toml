@@ -1,0 +1,24 @@
+[project]
+name = "safe-ping-backend"
+version = "0.1.0"
+description = "a secure workspace and chat app"
+readme = "docs/README.md"
+requires-python = ">=3.14"
+authors = [
+	{ name = "Anirban RoyChowdhury", email = "anirbanrc@proton.me" },
+	{ name = "Arka Bangal", email = "abangal2005@gmail.com" },
+	{ name = "Adrija Kundu", email = "adrijakundu143@gmail.com" },
+	{ name = "Anish Tiwari", email = "anishtiwari.758@gmail.com" },
+	{ name = "Aryan Halwai", email = "aryanhalwai.758@gmail.com" },
+]
+dependencies = [
+	"fastapi[standard]>=0.136.1",
+]
+
+[tool.ruff]
+line-length = 80
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "tab"
