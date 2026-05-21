@@ -1,16 +1,13 @@
 import flet as ft
 
+from app import App
+from utils.logger import setup_logging
+
+setup_logging()
+
 
 def main(page: ft.Page):
-	page.add(
-		ft.SafeArea(
-			expand=True,
-			content=ft.Container(
-				content=ft.Text("Safe Ping"),
-				alignment=ft.Alignment.CENTER,
-			),
-		)
-	)
+	page.render_views(App)
 
 
 _ = ft.run(main)
