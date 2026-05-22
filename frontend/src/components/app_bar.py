@@ -3,9 +3,12 @@ import platform
 import flet as ft
 import flet.version
 
-from constants.images import ImageSizes, Images
+from constants.dimensions import Dimensions
+from constants.images import Images, ImageSizes
 from constants.phrases import Titles
+from constants.spacing import Spacing
 from utils.app_version import get_app_version
+from utils.platform import platform_view
 
 
 @ft.component
@@ -35,24 +38,105 @@ def AppBar():
 			)
 		)
 
-	return ft.AppBar(
-		title=ft.Row(
-			[
-				ft.Image(src=Images.LOGO, width=ImageSizes.LOGO_SM),
-				ft.Text(Titles.APP_TITLE),
-			]
+	def minimize(_):
+		ft.context.page.window.minimized = True
+		ft.context.page.update()
+
+	def toggle_maximize(_):
+		page = ft.context.page
+		page.window.maximized = not bool(page.window.maximized)
+		page.update()
+
+	async def close(_):
+		await ft.context.page.window.close()
+
+	return platform_view(
+		desktop=lambda: ft.WindowDragArea(
+			content=ft.Container(
+				height=Dimensions.APP_BAR_HEIGHT,
+				padding=ft.Padding.symmetric(horizontal=Spacing.MD),
+				content=ft.Row(
+					alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+					vertical_alignment=ft.CrossAxisAlignment.CENTER,
+					controls=[
+						ft.Row(
+							spacing=Spacing.SM,
+							vertical_alignment=ft.CrossAxisAlignment.CENTER,
+							controls=[
+								ft.Image(
+									src=Images.LOGO,
+									width=ImageSizes.LOGO_SM,
+								),
+								ft.Text(Titles.APP_TITLE),
+							],
+						),
+						ft.Row(
+							spacing=Spacing.NONE,
+							controls=[
+								ft.IconButton(
+									icon=ft.Icons.INFO_OUTLINE,
+									tooltip="About",
+									icon_size=ImageSizes.ICON_SM,
+									on_click=show_about_dialog,
+								),
+								ft.IconButton(
+									icon=ft.Icons.MINIMIZE,
+									tooltip="Minimize",
+									icon_size=ImageSizes.ICON_SM,
+									on_click=minimize,
+								),
+								ft.IconButton(
+									icon=ft.Icons.CROP_SQUARE,
+									tooltip="Maximize",
+									icon_size=ImageSizes.ICON_SM,
+									on_click=toggle_maximize,
+								),
+								ft.IconButton(
+									icon=ft.Icons.CLOSE,
+									tooltip="Close",
+									icon_size=ImageSizes.ICON_SM,
+									on_click=close,
+								),
+							],
+						),
+					],
+				),
+			)
 		),
-		center_title=True,
-		actions=[
-			ft.PopupMenuButton(
-				icon=ft.Icons.MORE_VERT,
-				tooltip="Menu",
-				items=[
-					ft.PopupMenuItem(
-						content="About",
-						on_click=show_about_dialog,
-					)
-				],
+		mobile=lambda: ft.AppBar(
+			title=ft.Row(
+				[
+					ft.Image(src=Images.LOGO, width=ImageSizes.LOGO_SM),
+					ft.Text(Titles.APP_TITLE),
+				]
 			),
-		],
+			center_title=True,
+			actions=[
+				ft.PopupMenuButton(
+					icon=ft.Icons.MORE_VERT,
+					tooltip="Menu",
+					items=[
+						ft.PopupMenuItem(
+							content="About",
+							on_click=show_about_dialog,
+						)
+					],
+				),
+			],
+		),
+		web=lambda: ft.WindowDragArea(
+			content=ft.Container(
+				height=Dimensions.APP_BAR_HEIGHT,
+				padding=ft.Padding.symmetric(horizontal=Spacing.MD),
+				content=ft.Row(
+					[
+						ft.Image(
+							src=Images.LOGO,
+							width=ImageSizes.LOGO_SM,
+						),
+						ft.Text(Titles.APP_TITLE),
+					],
+				),
+			)
+		),
 	)

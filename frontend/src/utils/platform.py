@@ -44,7 +44,7 @@ def platform_view(
 		return desktop()
 
 	if is_mobile() and mobile:
-		return mobile()
+		return ft.SafeArea(expand=True, content=mobile())
 
 	assert fallback is not None
 
