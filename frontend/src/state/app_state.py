@@ -15,7 +15,7 @@ class AppModel:
 	theme_color: ft.Colors = ft.Colors.LIME
 
 	def route_change(self, e: ft.RouteChangeEvent):
-		logger.info("route changed from:", self.route, "to:", e.route)
+		logger.info("route changed", extra={"from": self.route, "to": e.route})
 		self.route = e.route
 
 	def navigate(self, new_route: str):

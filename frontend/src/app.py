@@ -76,8 +76,10 @@ def App():
 	ft.on_mounted(on_mounted)
 
 	def update_theme():
-		logger.info("theme mode changed to:", app.theme_mode)
-		logger.info("theme color changed to:", app.theme_color)
+		logger.info("theme mode changed", extra={"theme-mode": app.theme_mode})
+		logger.info(
+			"theme color changed", extra={"theme-color": app.theme_color}
+		)
 		ft.context.page.theme_mode = app.theme_mode
 		ft.context.page.theme = ft.context.page.dark_theme = ft.Theme(
 			color_scheme_seed=app.theme_color
