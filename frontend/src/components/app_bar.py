@@ -7,6 +7,8 @@ from constants.dimensions import Dimensions
 from constants.images import Images, ImageSizes
 from constants.phrases import Titles
 from constants.spacing import Spacing
+from constants.typography import Fonts, FontSize
+from contexts.theme import ThemeContext
 from utils.app_version import get_app_version
 from utils.platform import platform_view
 
@@ -60,14 +62,21 @@ def AppBar():
 					vertical_alignment=ft.CrossAxisAlignment.CENTER,
 					controls=[
 						ft.Row(
-							spacing=Spacing.SM,
+							spacing=Spacing.MD,
 							vertical_alignment=ft.CrossAxisAlignment.CENTER,
 							controls=[
 								ft.Image(
 									src=Images.LOGO,
 									width=ImageSizes.LOGO_SM,
+									color=ft.use_context(
+										ThemeContext
+									).seed_color,
 								),
-								ft.Text(Titles.APP_TITLE),
+								ft.Text(
+									Titles.APP_TITLE,
+									font_family=Fonts.HEADER,
+									size=FontSize.LG,
+								),
 							],
 						),
 						ft.Row(
@@ -106,8 +115,16 @@ def AppBar():
 		mobile=lambda: ft.AppBar(
 			title=ft.Row(
 				[
-					ft.Image(src=Images.LOGO, width=ImageSizes.LOGO_SM),
-					ft.Text(Titles.APP_TITLE),
+					ft.Image(
+						src=Images.LOGO,
+						width=ImageSizes.LOGO_SM,
+						color=ft.use_context(ThemeContext).seed_color,
+					),
+					ft.Text(
+						Titles.APP_TITLE,
+						font_family=Fonts.HEADER,
+						size=FontSize.LG,
+					),
 				]
 			),
 			center_title=True,
@@ -133,8 +150,13 @@ def AppBar():
 						ft.Image(
 							src=Images.LOGO,
 							width=ImageSizes.LOGO_SM,
+							color=ft.use_context(ThemeContext).seed_color,
 						),
-						ft.Text(Titles.APP_TITLE),
+						ft.Text(
+							Titles.APP_TITLE,
+							font_family=Fonts.HEADER,
+							size=FontSize.LG,
+						),
 					],
 				),
 			)
