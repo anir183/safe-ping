@@ -1,6 +1,5 @@
-from collections.abc import Callable
 from dataclasses import dataclass
-
+from collections.abc import Callable
 import flet as ft
 
 from constants.room import RoomSection
@@ -8,34 +7,25 @@ from constants.room import RoomSection
 
 @dataclass(frozen=True)
 class RoomContextValue:
+	room_id: str | None
 	active_section: RoomSection
 
-	active_chat_id: str | None
-	active_whiteboard_id: str | None
-	active_note_id: str | None
-
+	set_room_id: Callable[[str | None], None]
 	set_section: Callable[[RoomSection], None]
 
-	open_chat: Callable[[str], None]
-	open_whiteboard: Callable[[str], None]
-	open_note: Callable[[str], None]
-
-	close_panel: Callable[[], None]
+	open_room: Callable[[str], None]
+	close_room: Callable[[], None]
 
 
 RoomContext = ft.create_context(
 	RoomContextValue(
+		room_id=None,
 		active_section=RoomSection.CHAT,
-		active_chat_id=None,
-		active_whiteboard_id=None,
-		active_note_id=None,
 
+		set_room_id=lambda _: None,
 		set_section=lambda _: None,
 
-		open_chat=lambda _: None,
-		open_whiteboard=lambda _: None,
-		open_note=lambda _: None,
-
-		close_panel=lambda: None,
+		open_room=lambda _: None,
+		close_room=lambda: None,
 	)
 )

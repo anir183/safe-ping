@@ -1,12 +1,16 @@
 import logging
+from typing import Callable
 
 import flet as ft
 
 from components.app_bar import AppBar
 from components.mobile_app_bar import MobileAppBar
 from constants.dimensions import Dimensions
+from constants.navigation import NavID
 from constants.phrases import Titles
 from constants.typography import FONT_FILES, Fonts
+from contexts.navigation import NavigationContext, NavigationContextValue
+from contexts.room import RoomContext
 from contexts.room_provider import RoomProvider
 from contexts.route import RouteContext, RouteContextValue
 from contexts.theme import ThemeContext, ThemeContextValue
@@ -54,8 +58,6 @@ def App() -> ft.Control:
 		),
 		dependencies=[app.route],
 	)
-
-	page = get_page_for_route(app.route)
 
 	def on_mounted():
 		page = ft.context.page
@@ -106,19 +108,37 @@ def App() -> ft.Control:
 
 	ft.on_updated(update_theme, [app.theme_mode, app.theme_color])
 
+	nav: str | NavID
+	set_nav: Callable
+	nav, set_nav = ft.use_state(NavID.DASH)
+
+	def set_id(id: NavID | str):
+		set_nav(id)
+		ft.use_context(RoomContext).open_room(id)
+		
+
 	return RoomProvider(
 		lambda: RouteContext(
 			route_context,
-			lambda: ThemeContext(
-				theme_context,
-				lambda: ft.View(
-					route="/",
-					appbar=MobileAppBar(),
-					controls=[
-						AppBar(),
-						ft.SafeArea(expand=True, content=page),
-					],
+			lambda: NavigationContext(
+				NavigationContextValue(
+					selected=nav,
+					set_selected=set_id,
+				),
+				lambda: ThemeContext(
+					theme_context,
+					lambda: ft.View(
+						route="/",
+						appbar=MobileAppBar(),
+						controls=[
+							AppBar(),
+							ft.SafeArea(
+								expand=True,
+								content=get_page_for_route(app.route),
+							),
+						],
+					),
 				),
 			),
-		)
+		),
 	)
