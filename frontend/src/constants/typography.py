@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 FONT_FILES = {
 	"Bricolage Grotesque": "fonts/bricolage_grotesque/BricolageGrotesque-VariableFont_opsz,wdth,wght.ttf",
-	"IBM Plex": "fonts/imb_plex/IBMPlexSans-VariableFont_wdth,wght.ttf",
-	"IBM Plex Italic": "fonts/imb_plex/IBMPlexSans-Italic-VariableFont_wdth,wght.ttf",
+	"IBM Plex": "fonts/ibm_plex/IBMPlexSans-VariableFont_wdth,wght.ttf",
+	"IBM Plex Italic": "fonts/ibm_plex/IBMPlexSans-Italic-VariableFont_wdth,wght.ttf",
 }
 
 
