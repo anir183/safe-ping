@@ -1,7 +1,10 @@
+import asyncio
 import logging
 
 import flet as ft
+
 from components.app_bar import AppBar
+from constants.dimensions import Dimensions
 from constants.phrases import Titles
 from constants.typography import FONT_FILES
 from contexts.route import RouteContext, RouteContextValue
@@ -24,23 +27,18 @@ def App():
 	toggle_mode = ft.use_callback(
 		lambda: app.toggle_theme(), dependencies=[app.theme_mode]
 	)
-	set_theme_color = ft.use_callback(
-		lambda color: app.set_theme_color(color), dependencies=[app.theme_color]
-	)
 
 	# memoize the provided value so its identity changes only when mode changes
-	theme_value = ft.use_memo(
+	theme_context = ft.use_memo(
 		lambda: ThemeContextValue(
 			mode=app.theme_mode,
 			seed_color=app.theme_color,
 			toggle_mode=toggle_mode,
-			set_seed_color=set_theme_color,
 		),
 		dependencies=[
 			app.theme_mode,
 			app.theme_color,
 			toggle_mode,
-			set_theme_color,
 		],
 	)
 
@@ -59,29 +57,43 @@ def App():
 	page = HomePage()
 
 	def on_mounted():
+		page = ft.context.page
+
 		logger.info(
 			"mounted page",
 			extra={
-				"width": ft.context.page.width,
-				"height": ft.context.page.height,
+				"width": page.width,
+				"height": page.height,
 			},
 		)
 
-		page = ft.context.page
+		page.services.append(app.prefs)
 
 		page.title = Titles.APP_TITLE
 		page.fonts = FONT_FILES
 
+		# remove title bar and buttons on desktop
 		page.window.title_bar_hidden = True
 		page.window.title_bar_buttons_hidden = True
-		page.window.frameless = True
+		page.window.frameless = False
+
+		# minimum window size and defaults for desktop
+		page.window.resizable = True
+		page.window.maximized = False
+		page.window.min_width = Dimensions.WINDOW_MIN_WIDTH
+		page.window.min_height = Dimensions.WINDOW_MIN_HEIGHT
+
+		_ = asyncio.create_task(app.load_theme())
 
 	ft.on_mounted(on_mounted)
 
 	def update_theme():
-		logger.info("theme mode changed", extra={"theme-mode": app.theme_mode})
 		logger.info(
-			"theme color changed", extra={"theme-color": app.theme_color}
+			"theme mode changed",
+			extra={
+				"theme-mode": app.theme_mode,
+				"theme-color": app.theme_color,
+			},
 		)
 
 		ft.context.page.theme_mode = app.theme_mode
@@ -94,13 +106,10 @@ def App():
 	return RouteContext(
 		route_context,
 		lambda: ThemeContext(
-			theme_value,
+			theme_context,
 			lambda: ft.View(
 				route="/",
-				controls=[
-					AppBar(),
-					ft.SafeArea(expand=True, content=page)
-				],
+				controls=[AppBar(), ft.SafeArea(expand=True, content=page)],
 			),
 		),
 	)

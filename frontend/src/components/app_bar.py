@@ -15,6 +15,8 @@ from utils.platform import platform_view
 
 @ft.component
 def AppBar():
+	theme = ft.use_context(ThemeContext)
+
 	def show_about_dialog():
 		ft.context.page.show_dialog(
 			ft.AlertDialog(
@@ -68,9 +70,7 @@ def AppBar():
 								ft.Image(
 									src=Images.LOGO,
 									width=ImageSizes.LOGO_SM,
-									color=ft.use_context(
-										ThemeContext
-									).seed_color,
+									color=theme.seed_color,
 								),
 								ft.Text(
 									Titles.APP_TITLE,
@@ -82,6 +82,16 @@ def AppBar():
 						ft.Row(
 							spacing=Spacing.NONE,
 							controls=[
+								ft.IconButton(
+									icon=(
+										ft.Icons.DARK_MODE
+										if theme.mode == ft.ThemeMode.DARK
+										else ft.Icons.LIGHT_MODE
+									),
+									tooltip="Toggle theme",
+									icon_size=ImageSizes.ICON_SM,
+									on_click=lambda _: theme.toggle_mode(),
+								),
 								ft.IconButton(
 									icon=ft.Icons.INFO_OUTLINE,
 									tooltip="About",
@@ -118,7 +128,7 @@ def AppBar():
 					ft.Image(
 						src=Images.LOGO,
 						width=ImageSizes.LOGO_SM,
-						color=ft.use_context(ThemeContext).seed_color,
+						color=theme.seed_color,
 					),
 					ft.Text(
 						Titles.APP_TITLE,
@@ -129,6 +139,16 @@ def AppBar():
 			),
 			center_title=True,
 			actions=[
+				ft.IconButton(
+					icon=(
+						ft.Icons.DARK_MODE
+						if theme.mode == ft.ThemeMode.DARK
+						else ft.Icons.LIGHT_MODE
+					),
+					tooltip="Toggle theme",
+					icon_size=ImageSizes.ICON_SM,
+					on_click=lambda _: theme.toggle_mode(),
+				),
 				ft.PopupMenuButton(
 					icon=ft.Icons.MORE_VERT,
 					tooltip="Menu",
@@ -150,12 +170,22 @@ def AppBar():
 						ft.Image(
 							src=Images.LOGO,
 							width=ImageSizes.LOGO_SM,
-							color=ft.use_context(ThemeContext).seed_color,
+							color=theme.seed_color,
 						),
 						ft.Text(
 							Titles.APP_TITLE,
 							font_family=Fonts.HEADER,
 							size=FontSize.LG,
+						),
+						ft.IconButton(
+							icon=(
+								ft.Icons.DARK_MODE
+								if theme.mode == ft.ThemeMode.DARK
+								else ft.Icons.LIGHT_MODE
+							),
+							tooltip="Toggle theme",
+							icon_size=ImageSizes.ICON_SM,
+							on_click=lambda _: theme.toggle_mode(),
 						),
 					],
 				),
