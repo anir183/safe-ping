@@ -4,6 +4,7 @@ import logging
 import flet as ft
 
 from components.app_bar import AppBar
+from components.mobile_app_bar import MobileAppBar
 from constants.dimensions import Dimensions
 from constants.phrases import Titles
 from constants.typography import FONT_FILES
@@ -109,6 +110,7 @@ def App():
 			theme_context,
 			lambda: ft.View(
 				route="/",
+				appbar=MobileAppBar(),
 				controls=[AppBar(), ft.SafeArea(expand=True, content=page)],
 			),
 		),

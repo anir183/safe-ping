@@ -122,73 +122,51 @@ def AppBar():
 				),
 			)
 		),
-		mobile=lambda: ft.AppBar(
-			title=ft.Row(
-				[
-					ft.Image(
-						src=Images.LOGO,
-						width=ImageSizes.LOGO_SM,
-						color=theme.seed_color,
-					),
-					ft.Text(
-						Titles.APP_TITLE,
-						font_family=Fonts.HEADER,
-						size=FontSize.LG,
-					),
-				]
-			),
-			center_title=True,
-			actions=[
-				ft.IconButton(
-					icon=(
-						ft.Icons.DARK_MODE
-						if theme.mode == ft.ThemeMode.DARK
-						else ft.Icons.LIGHT_MODE
-					),
-					tooltip="Toggle theme",
-					icon_size=ImageSizes.ICON_SM,
-					on_click=lambda _: theme.toggle_mode(),
-				),
-				ft.PopupMenuButton(
-					icon=ft.Icons.MORE_VERT,
-					tooltip="Menu",
-					items=[
-						ft.PopupMenuItem(
-							content="About",
-							on_click=show_about_dialog,
-						)
-					],
-				),
-			],
-		),
-		web=lambda: ft.WindowDragArea(
-			content=ft.Container(
-				height=Dimensions.APP_BAR_HEIGHT,
-				padding=ft.Padding.symmetric(horizontal=Spacing.MD),
-				content=ft.Row(
-					[
-						ft.Image(
-							src=Images.LOGO,
-							width=ImageSizes.LOGO_SM,
-							color=theme.seed_color,
-						),
-						ft.Text(
-							Titles.APP_TITLE,
-							font_family=Fonts.HEADER,
-							size=FontSize.LG,
-						),
-						ft.IconButton(
-							icon=(
-								ft.Icons.DARK_MODE
-								if theme.mode == ft.ThemeMode.DARK
-								else ft.Icons.LIGHT_MODE
+		web=lambda: ft.Container(
+			height=Dimensions.APP_BAR_HEIGHT,
+			padding=ft.Padding.symmetric(horizontal=Spacing.MD),
+			content=ft.Row(
+				alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+				vertical_alignment=ft.CrossAxisAlignment.CENTER,
+				controls=[
+					ft.Row(
+						spacing=Spacing.MD,
+						vertical_alignment=ft.CrossAxisAlignment.CENTER,
+						controls=[
+							ft.Image(
+								src=Images.LOGO,
+								width=ImageSizes.LOGO_SM,
+								color=theme.seed_color,
 							),
-							tooltip="Toggle theme",
-							icon_size=ImageSizes.ICON_SM,
-							on_click=lambda _: theme.toggle_mode(),
-						),
-					],
-				),
-			)
+							ft.Text(
+								Titles.APP_TITLE,
+								font_family=Fonts.HEADER,
+								size=FontSize.LG,
+							),
+						],
+					),
+					ft.Row(
+						spacing=Spacing.NONE,
+						controls=[
+							ft.IconButton(
+								icon=(
+									ft.Icons.DARK_MODE
+									if theme.mode == ft.ThemeMode.DARK
+									else ft.Icons.LIGHT_MODE
+								),
+								tooltip="Toggle theme",
+								icon_size=ImageSizes.ICON_SM,
+								on_click=lambda _: theme.toggle_mode(),
+							),
+							ft.IconButton(
+								icon=ft.Icons.INFO_OUTLINE,
+								tooltip="About",
+								icon_size=ImageSizes.ICON_SM,
+								on_click=show_about_dialog,
+							),
+						],
+					),
+				],
+			),
 		),
 	)
