@@ -11,6 +11,7 @@ from constants.typography import FONT_FILES
 from contexts.route import RouteContext, RouteContextValue
 from contexts.theme import ThemeContext, ThemeContextValue
 from pages.home import HomePage
+from router import get_page_for_route
 from state.app_state import AppModel
 
 logger = logging.getLogger(__name__)
@@ -55,7 +56,7 @@ def App():
 		dependencies=[app.route],
 	)
 
-	page = HomePage()
+	page = get_page_for_route(app.route)
 
 	def on_mounted():
 		page = ft.context.page
