@@ -74,6 +74,7 @@ def MobileAppBar():
 					items=[
 						ft.PopupMenuItem(
 							content="About",
+							icon=ft.Icons.INFO_OUTLINE,
 							on_click=show_about_dialog,
 						)
 					],
