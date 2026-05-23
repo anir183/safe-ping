@@ -1,4 +1,3 @@
-import asyncio
 import logging
 
 import flet as ft
@@ -8,9 +7,9 @@ from components.mobile_app_bar import MobileAppBar
 from constants.dimensions import Dimensions
 from constants.phrases import Titles
 from constants.typography import FONT_FILES, Fonts
+from contexts.room_provider import RoomProvider
 from contexts.route import RouteContext, RouteContextValue
 from contexts.theme import ThemeContext, ThemeContextValue
-from pages.home import HomePage
 from router import get_page_for_route
 from state.app_state import AppModel
 
@@ -18,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 @ft.component
-def App():
+def App() -> ft.Control:
 	app, _ = ft.use_state(AppModel(route=ft.context.page.route))
 
 	# subscribe to page events as soon as possible
@@ -107,14 +106,19 @@ def App():
 
 	ft.on_updated(update_theme, [app.theme_mode, app.theme_color])
 
-	return RouteContext(
-		route_context,
-		lambda: ThemeContext(
-			theme_context,
-			lambda: ft.View(
-				route="/",
-				appbar=MobileAppBar(),
-				controls=[AppBar(), ft.SafeArea(expand=True, content=page)],
+	return RoomProvider(
+		lambda: RouteContext(
+			route_context,
+			lambda: ThemeContext(
+				theme_context,
+				lambda: ft.View(
+					route="/",
+					appbar=MobileAppBar(),
+					controls=[
+						AppBar(),
+						ft.SafeArea(expand=True, content=page),
+					],
+				),
 			),
-		),
+		)
 	)
