@@ -3,10 +3,11 @@ from constants.images import ImageSizes
 from constants.spacing import Spacing
 from constants.typography import FontSize
 
-def UserAvatar(radius=ImageSizes.AVATAR_SM) -> ft.Control:
+def UserAvatar(radius=ImageSizes.AVATAR_SM, src="https://i.pravatar.cc/100"):
 	return ft.CircleAvatar(
 		radius=radius,
-		foreground_image_src="https://i.pravatar.cc/100",
+		foreground_image_src=src,
+		content=ft.Icon(ft.Icons.PERSON)
 	)
 
 def on_user_action(e: ft.Event[ft.PopupMenuButton]):

@@ -16,6 +16,7 @@ class AppModel:
 	route: str
 
 	prefs: ft.SharedPreferences = field(default_factory=ft.SharedPreferences)
+	services_ready: bool = False
 
 	theme_mode: ft.ThemeMode = ft.ThemeMode.DARK
 	theme_color: ft.Colors = Colors.DARK_SEED_COLOR
@@ -39,7 +40,13 @@ class AppModel:
 			await ft.context.page.push_route(views[-2].route)
 
 	async def load_theme(self):
-		mode = await self.prefs.get(StorageKeys.THEME_MODE)
+		if not self.services_ready:
+			return
+
+		try:
+			mode = await self.prefs.get(StorageKeys.THEME_MODE)
+		except Exception:
+			mode = None
 
 		logger.info(
 			"loaded stored theme",
@@ -54,9 +61,16 @@ class AppModel:
 			self.theme_color = Colors.DARK_SEED_COLOR
 
 	async def save_theme(self):
-		_ = await self.prefs.set(
-			key=StorageKeys.THEME_MODE, value=self.theme_mode.value
-		)
+		if not self.services_ready:
+			return
+
+		try:
+			_ = await self.prefs.set(
+				key=StorageKeys.THEME_MODE,
+				value=self.theme_mode.value,
+			)
+		except Exception:
+			pass
 
 		logger.info(
 			"theme mode saved",
@@ -71,4 +85,5 @@ class AppModel:
 			self.theme_mode = ft.ThemeMode.LIGHT
 			self.theme_color = Colors.LIGHT_SEED_COLOR
 
-		_ = asyncio.create_task(self.save_theme())
+		if self.services_ready:
+			_ = asyncio.create_task(self.save_theme())

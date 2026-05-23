@@ -69,7 +69,8 @@ def App():
 			},
 		)
 
-		page.services.append(app.prefs)
+		page.services = [app.prefs]
+		app.services_ready = True
 
 		page.title = Titles.APP_TITLE
 		page.fonts = FONT_FILES
@@ -85,7 +86,7 @@ def App():
 		page.window.min_width = Dimensions.WINDOW_MIN_WIDTH
 		page.window.min_height = Dimensions.WINDOW_MIN_HEIGHT
 
-		_ = asyncio.create_task(app.load_theme())
+		_ = page.run_task(app.load_theme)
 
 	ft.on_mounted(on_mounted)
 
