@@ -35,4 +35,4 @@ class UtilConsts:
 	LOG_FILE_MAX_BACKUPS: int = 5
 	LOG_FILE_ENCODING: str = "utf-8"
 	
-	APP_VERSION: str = "890f8a05c6"
+	APP_VERSION: str = "7608346474"
