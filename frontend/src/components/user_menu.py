@@ -1,8 +1,11 @@
+import logging
 import flet as ft
 
 from constants.images import ImageSizes
 from constants.spacing import Spacing
 from constants.typography import FontSize
+
+logger = logging.getLogger(__name__)
 
 
 def UserAvatar(radius=ImageSizes.AVATAR_SM, src="https://i.pravatar.cc/100"):
@@ -17,17 +20,21 @@ def on_user_action(e: ft.Event[ft.PopupMenuButton]):
 	action = e.control.data
 
 	if action == "settings":
-		print("settings clicked")
+		logger.info("settings clicked")
 	elif action == "logout":
-		print("logout clicked")
+		logger.info("logout clicked")
 
 
 def UserMenuCompact(on_select: ft.ControlEventHandler[ft.PopupMenuButton]):
 	return ft.PopupMenuButton(
 		content=UserAvatar(),
 		items=[
-			ft.PopupMenuItem(content="Settings", data="settings"),
-			ft.PopupMenuItem(content="Logout", data="logout"),
+			ft.PopupMenuItem(
+				content="Settings", icon=ft.Icons.SETTINGS, data="settings"
+			),
+			ft.PopupMenuItem(
+				content="Logout", icon=ft.Icons.LOGOUT, data="logout"
+			),
 		],
 		on_select=on_select,
 	)

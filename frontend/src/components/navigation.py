@@ -1,3 +1,4 @@
+import logging
 import flet as ft
 
 from components.nav_drawer_button import NavDrawerButton
@@ -12,6 +13,8 @@ from constants.images import ImageSizes
 from constants.navigation import NAV_ITEMS
 from constants.spacing import Spacing
 from contexts.navigation import NavigationContext
+
+logger = logging.getLogger(__name__)
 
 
 @ft.component
@@ -92,7 +95,6 @@ def Navigation():
 				spacing=0,
 				expand=True,
 				controls=[
-					# Close button (mobile)
 					*(
 						[
 							ft.IconButton(
@@ -104,7 +106,6 @@ def Navigation():
 						if dismissible
 						else []
 					),
-					# SCROLLABLE NAV LIST
 					ft.Container(
 						expand=True,
 						content=ft.ListView(
@@ -113,8 +114,22 @@ def Navigation():
 							controls=build_full_nav_items(),
 						),
 					),
+					ft.TextButton(
+						width=float("inf"),
+						icon=ft.Icons.ADD_CIRCLE,
+						content="Add Room",
+						tooltip="Add Room",
+						on_click=new_room,
+						style=ft.ButtonStyle(
+							padding=ft.Padding.symmetric(
+								horizontal=Spacing.MD,
+								vertical=Spacing.LG,
+							),
+							alignment=ft.Alignment.CENTER_LEFT,
+							shape=ft.RoundedRectangleBorder(radius=12),
+						),
+					),
 					ft.Divider(),
-					# USER PANEL (expanded)
 					ft.Container(
 						padding=Spacing.SM,
 						content=UserMenuExpanded(on_user_action),
@@ -122,6 +137,9 @@ def Navigation():
 				],
 			),
 		)
+
+	def new_room():
+		logger.info("new room")
 
 	rail_destinations: list[ft.NavigationRailDestination] = []
 
@@ -181,7 +199,7 @@ def Navigation():
 							icon=ft.Icons.ADD_CIRCLE,
 							tooltip="Add Room",
 							icon_size=ImageSizes.ICON_SM,
-							on_click=None,
+							on_click=new_room,
 						),
 						destinations=rail_destinations,
 						expand=True,

@@ -1,8 +1,8 @@
 import flet as ft
 
 from components.navigation import Navigation
+from components.room_shell import RoomShell
 from constants.navigation import NavID
-from constants.typography import FontSize
 from contexts.navigation import (
 	NavigationContext,
 	NavigationContextValue,
@@ -13,29 +13,6 @@ from contexts.navigation import (
 def HomePage():
 	selected, set_selected = ft.use_state(NavID.DASH)
 
-	def content() -> ft.Control:
-		match selected:
-			case NavID.CHAT_1:
-				text = "Chat 1 Area"
-
-			case NavID.CHAT_2:
-				text = "Chat 2 Area"
-
-			case NavID.CHAT_3:
-				text = "Chat 3 Area"
-
-			case _:
-				text = "Dashboard Area"
-
-		return ft.Container(
-			expand=True,
-			alignment=ft.Alignment.CENTER,
-			content=ft.Text(
-				text,
-				size=FontSize.XL,
-			),
-		)
-
 	return NavigationContext(
 		NavigationContextValue(
 			selected=selected,
@@ -45,7 +22,7 @@ def HomePage():
 			expand=True,
 			controls=[
 				Navigation(),
-				content(),
+				RoomShell(selected),
 			],
 		),
 	)
