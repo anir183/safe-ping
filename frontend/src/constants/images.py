@@ -16,9 +16,9 @@ class ImageSizes:
 	XL: int = 64
 	XXL: int = 96
 
-	AVATAR_SM: int = 32
-	AVATAR_MD: int = 48
-	AVATAR_LG: int = 72
+	AVATAR_SM: int = 16
+	AVATAR_MD: int = 32
+	AVATAR_LG: int = 48
 
 	ICON_SM: int = 18
 	ICON_MD: int = 24

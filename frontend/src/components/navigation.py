@@ -1,6 +1,7 @@
 import flet as ft
 
 from components.nav_drawer_button import NavDrawerButton
+from components.user_menu import UserMenuCompact, UserMenuExpanded, on_user_action
 from constants.breakpoints import Breakpoints
 from constants.dimensions import Dimensions
 from constants.navigation import NAV_ITEMS
@@ -12,10 +13,7 @@ from contexts.navigation import NavigationContext
 def Navigation():
 	nav = ft.use_context(NavigationContext)
 
-	width, set_width = ft.use_state(
-		ft.context.page.width or 0
-	)
-
+	width, set_width = ft.use_state(ft.context.page.width or 0)
 	expanded, set_expanded = ft.use_state(False)
 
 	is_large = width >= Breakpoints.LG
@@ -29,24 +27,15 @@ def Navigation():
 		for index, item in enumerate(NAV_ITEMS):
 			if item["id"] == nav.selected:
 				return index
-
 		return 0
 
-	def on_rail_change(
-		e: ft.Event[ft.NavigationRail],
-	):
+	def on_rail_change(e: ft.Event[ft.NavigationRail]):
 		index = e.control.selected_index or 0
 
 		if 0 <= index < len(NAV_ITEMS):
-			nav.set_selected(
-				NAV_ITEMS[index]["id"]
-			)
+			nav.set_selected(NAV_ITEMS[index]["id"])
 
-	def sidebar(
-		*,
-		dismissible: bool,
-	) -> ft.Control:
-
+	def sidebar(*, dismissible: bool) -> ft.Control:
 		controls: list[ft.Control] = []
 
 		if dismissible:
@@ -59,7 +48,6 @@ def Navigation():
 			)
 
 		for index, item in enumerate(NAV_ITEMS):
-
 			if index == 1:
 				controls.append(ft.Divider())
 
@@ -68,8 +56,7 @@ def Navigation():
 					label=item["label"],
 					icon=item["icon"],
 					selected=nav.selected == item["id"],
-					on_click=lambda _, item_id=item["id"]:
-						nav.set_selected(item_id),
+					on_click=lambda _, item_id=item["id"]: nav.set_selected(item_id),
 				)
 			)
 
@@ -77,14 +64,24 @@ def Navigation():
 			width=Dimensions.SIDEBAR_WIDTH,
 			padding=Spacing.MD,
 			content=ft.Column(
-				spacing=Spacing.SM,
-				controls=controls,
+				controls=[
+					ft.Column(
+						controls=controls,
+						spacing=Spacing.SM,
+						expand=True,
+					),
+					ft.Divider(),
+
+					# 👇 now delegated
+					ft.Container(
+						padding=Spacing.SM,
+						content=UserMenuExpanded(on_user_action),
+					),
+				],
 			),
 		)
 
-	rail_destinations: list[
-		ft.NavigationRailDestination
-	] = []
+	rail_destinations: list[ft.NavigationRailDestination] = []
 
 	for item in NAV_ITEMS:
 		rail_destinations.append(
@@ -114,17 +111,32 @@ def Navigation():
 
 	return ft.Row(
 		controls=[
-			ft.NavigationRail(
-				selected_index=selected_index(),
-				label_type=ft.NavigationRailLabelType.NONE,
-				min_width=Dimensions.NAV_RAIL_WIDTH,
-				on_change=on_rail_change,
-				leading=ft.IconButton(
-					icon=ft.Icons.MENU,
-					tooltip="Open navigation",
-					on_click=lambda _: set_expanded(True),
-				),
-				destinations=rail_destinations,
+			ft.Column(
+				width=Dimensions.NAV_RAIL_WIDTH,
+				expand=True,
+				controls=[
+					ft.NavigationRail(
+						selected_index=selected_index(),
+						label_type=ft.NavigationRailLabelType.NONE,
+						on_change=on_rail_change,
+						leading=ft.IconButton(
+							icon=ft.Icons.MENU,
+							tooltip="Open navigation",
+							on_click=lambda _: set_expanded(True),
+						),
+						destinations=rail_destinations,
+						expand=True,
+					),
+
+					ft.Container(
+						padding=ft.Padding.symmetric(
+							horizontal=Spacing.MD,
+							vertical=Spacing.XXL,
+						),
+						alignment=ft.Alignment.CENTER,
+						content=UserMenuCompact(on_user_action),
+					),
+				],
 			),
 			ft.VerticalDivider(width=1),
 		]

@@ -7,7 +7,7 @@ from components.app_bar import AppBar
 from components.mobile_app_bar import MobileAppBar
 from constants.dimensions import Dimensions
 from constants.phrases import Titles
-from constants.typography import FONT_FILES
+from constants.typography import FONT_FILES, Fonts
 from contexts.route import RouteContext, RouteContextValue
 from contexts.theme import ThemeContext, ThemeContextValue
 from pages.home import HomePage
@@ -100,7 +100,8 @@ def App():
 
 		ft.context.page.theme_mode = app.theme_mode
 		ft.context.page.theme = ft.context.page.dark_theme = ft.Theme(
-			color_scheme_seed=app.theme_color
+			color_scheme_seed=app.theme_color,
+			font_family=Fonts.BODY,
 		)
 
 	ft.on_updated(update_theme, [app.theme_mode, app.theme_color])
