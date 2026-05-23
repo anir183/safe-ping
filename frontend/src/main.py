@@ -1,13 +1,13 @@
 import flet as ft
 
-from app import App
-from utils.logger import setup_logging
-
-setup_logging()
-
 
 def main(page: ft.Page):
-	page.render_views(App)
+	page.add(
+		ft.Container(
+			expand=True,
+			content=ft.Placeholder(),
+		)
+	)
 
 
 _ = ft.run(main)
