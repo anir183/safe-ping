@@ -5,13 +5,9 @@ from flet.controls.services.shared_preferences import SharedPreferencesValueType
 
 logger = logging.getLogger(__name__)
 
-_service = ft.SharedPreferences()
 
-
-async def store(key: str, value: SharedPreferencesValueType) -> None:
-	assert _service is not None
-
-	success = await _service.set(key, value)
+async def pref_store(key: str, value: SharedPreferencesValueType) -> None:
+	success = await ft.SharedPreferences().set(key, value)
 	if success:
 		logger.info(
 			"stored to prefs",
@@ -30,10 +26,8 @@ async def store(key: str, value: SharedPreferencesValueType) -> None:
 		)
 
 
-async def retrieve(key: str) -> SharedPreferencesValueType | None:
-	assert _service is not None
-
-	data = await _service.get(key)
+async def pref_retrieve(key: str) -> SharedPreferencesValueType | None:
+	data = await ft.SharedPreferences().get(key)
 	if data is not None:
 		logger.info(
 			"loaded from prefs",

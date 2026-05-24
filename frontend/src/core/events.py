@@ -1,3 +1,6 @@
+import asyncio
+import logging
+
 import flet as ft
 
 from constants.dimensions import DIM_WIN_MIN_HEIGHT, DIM_WIN_MIN_WIDTH
@@ -5,9 +8,26 @@ from constants.fonts import FONT_BODY, FONT_FILES
 from constants.info import APP_TITLE
 from state.app_state import AppState
 
+logger = logging.getLogger(__name__)
+
 
 def subscribe_events(app_state: AppState) -> None:
 	page = ft.context.page
+
+	def update_theme():
+		logger.info(
+			"theme mode changed",
+			extra={
+				"theme-mode": app_state.theme_mode,
+				"theme-color": app_state.theme_color,
+			},
+		)
+
+		page.theme_mode = app_state.theme_mode
+		page.theme = page.dark_theme = ft.Theme(
+			color_scheme_seed=app_state.theme_color,
+			font_family=FONT_BODY,
+		)
 
 	def on_mounted():
 		logger.info(
@@ -32,6 +52,9 @@ def subscribe_events(app_state: AppState) -> None:
 		page.window.min_width = DIM_WIN_MIN_WIDTH
 		page.window.min_height = DIM_WIN_MIN_HEIGHT
 
+		_ = asyncio.create_task(app_state.load_theme())
+
 	page.on_route_change = app_state.on_route_change
 	page.on_view_pop = app_state.on_view_pop
+	ft.on_updated(update_theme, [app_state.theme_mode, app_state.theme_color])
 	ft.on_mounted(on_mounted)
