@@ -62,7 +62,11 @@ class AppState:
 			self.theme_mode = ft.ThemeMode.DARK
 			self.theme_color = COLOR_PRIMARY_DARK
 
+	__saving_task = None
 	def toggle_theme(self):
+		if self.__saving_task and not self.__saving_task.done():
+			return
+
 		if self.theme_mode == ft.ThemeMode.LIGHT:
 			self.theme_mode = ft.ThemeMode.DARK
 			self.theme_color = COLOR_PRIMARY_DARK
@@ -70,7 +74,7 @@ class AppState:
 			self.theme_mode = ft.ThemeMode.LIGHT
 			self.theme_color = COLOR_PRIMARY_LIGHT
 
-		_ = asyncio.create_task(
+		self.__saving_task = asyncio.create_task(
 			pref_store(
 				key=PREF_THEME_MODE,
 				value=self.theme_mode.value,

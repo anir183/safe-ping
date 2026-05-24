@@ -7,7 +7,12 @@ logger = logging.getLogger(__name__)
 
 
 async def pref_store(key: str, value: SharedPreferencesValueType) -> None:
-	success = await ft.SharedPreferences().set(key, value)
+	success = False
+	try:
+		success = await ft.SharedPreferences().set(key, value)
+	except Exception:
+		logger.error("exception while storing prefs")
+
 	if success:
 		logger.info(
 			"stored to prefs",
@@ -27,7 +32,12 @@ async def pref_store(key: str, value: SharedPreferencesValueType) -> None:
 
 
 async def pref_retrieve(key: str) -> SharedPreferencesValueType | None:
-	data = await ft.SharedPreferences().get(key)
+	data = None
+	try:
+		data = await ft.SharedPreferences().get(key)
+	except Exception:
+		logger.error("exception while retrieving prefs")
+
 	if data is not None:
 		logger.info(
 			"loaded from prefs",

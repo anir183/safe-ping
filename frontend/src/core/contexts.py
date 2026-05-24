@@ -27,7 +27,6 @@ def ContextWrapper(
 
 	toggle_mode = ft.use_callback(
 		lambda: app_state.toggle_theme(),
-		dependencies=[app_state.theme_mode],
 	)
 
 	theme_context = ft.use_memo(
