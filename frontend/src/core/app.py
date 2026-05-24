@@ -2,7 +2,7 @@ import flet as ft
 
 from core.contexts import ContextWrapper
 from core.events import subscribe_events
-from core.router import RoutedPage
+from core.router import Router
 from state.app_state import AppState
 
 
@@ -16,5 +16,5 @@ def App() -> ft.Control:
 
 	return ContextWrapper(
 		app_state=app_state,
-		callback=RoutedPage
+		callback=Router
 	)

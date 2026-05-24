@@ -19,34 +19,6 @@ class AppState:
 	theme_mode: ft.ThemeMode = ft.ThemeMode.DARK
 	theme_color: ft.Colors = COLOR_PRIMARY_DARK
 
-	def push_route(self, new_route: str):
-		if new_route != self.route:
-			logger.info(
-				"navigating routes",
-				extra={
-					"route": new_route,
-				},
-			)
-			_ = asyncio.create_task(
-				ft.context.page.push_route(new_route),
-			)
-
-	def on_route_change(self, e: ft.RouteChangeEvent) -> None:
-		logger.info(
-			"route changed",
-			extra={
-				"from": self.route,
-				"to": e.route,
-			},
-		)
-		self.route = e.route
-
-	async def on_view_pop(self, _: ft.ViewPopEvent):
-		logger.info("view popped")
-		views = ft.unwrap_component(ft.context.page.views)
-		if len(views) > 1:
-			await ft.context.page.push_route(views[-2].route)
-
 	async def load_theme(self):
 		mode = await pref_retrieve(PREF_THEME_MODE)
 
@@ -74,6 +46,7 @@ class AppState:
 			self.theme_mode = ft.ThemeMode.LIGHT
 			self.theme_color = COLOR_PRIMARY_LIGHT
 
+		_ = ft.context.page.shared_preferences.get("")
 		self.__saving_task = asyncio.create_task(
 			pref_store(
 				key=PREF_THEME_MODE,

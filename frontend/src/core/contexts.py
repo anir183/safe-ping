@@ -2,7 +2,7 @@ from typing import Callable
 
 import flet as ft
 
-from contexts.route import RouteContext, RouteContextValue
+from constants.routes import ROUTE_ROOT
 from contexts.theme import ThemeContext, ThemeContextValue
 from state.app_state import AppState
 
@@ -12,19 +12,6 @@ def ContextWrapper(
 	app_state: AppState,
 	callback: Callable[[], ft.Control],
 ):
-	navigate_callback = ft.use_callback(
-		fn=lambda new_route: app_state.push_route(new_route),
-		dependencies=[app_state.route],
-	)
-
-	route_context = ft.use_memo(
-		calculate_value=lambda: RouteContextValue(
-			route=app_state.route,
-			navigate=navigate_callback,
-		),
-		dependencies=[app_state.route],
-	)
-
 	toggle_mode = ft.use_callback(
 		lambda: app_state.toggle_theme(),
 	)
@@ -45,7 +32,7 @@ def ContextWrapper(
 	theme_wrapped = ThemeContext(
 		value=theme_context,
 		callback=lambda: ft.View(
-			route="/",
+			route=ROUTE_ROOT,
 			appbar=None,
 			controls=[
 				ft.SafeArea(
@@ -56,9 +43,4 @@ def ContextWrapper(
 		),
 	)
 
-	route_wrapped = RouteContext(
-		value=route_context,
-		callback=lambda: theme_wrapped,
-	)
-
-	return route_wrapped
+	return theme_wrapped

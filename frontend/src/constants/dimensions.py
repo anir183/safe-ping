@@ -5,3 +5,5 @@ DIM_APP_BAR_HEIGHT: int = 36
 
 DIM_RAIL_WIDTH: int = 72
 DIM_DRAWER_WIDTH: int = 240
+
+DIM_INF: float = float("inf")
