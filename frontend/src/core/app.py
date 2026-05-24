@@ -1,14 +1,16 @@
 import flet as ft
 
-from core.events import subscribeEvents
-from core.router import routedPage
+from core.events import subscribe_events
+from core.router import routed_page
 from state.app_state import AppState
 
 
 @ft.component
 def App() -> ft.Control:
-	appState, _ = ft.use_state(AppState(route=ft.context.page.route))
+	app_state, _ = ft.use_state(
+		initial=AppState(route=ft.context.page.route),
+	)
 
-	subscribeEvents(appState=appState)
+	subscribe_events(app_state)
 
-	return routedPage()
+	return routed_page()

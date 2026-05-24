@@ -1,7 +1,7 @@
 import flet as ft
 
 
-def routedPage(route: str = "test") -> ft.Control:
+def routed_page(route: str = "test") -> ft.Control:
 	match route:
 		case _:
 			return ft.Container(

@@ -3,7 +3,7 @@ import logging
 import flet as ft
 
 from core.app import App
-from utils.logging import setupLogging
+from utils.logging import setup_logging
 from utils.paths import get_asset_dir
 
 
@@ -11,7 +11,7 @@ def main(page: ft.Page):
 	page.render_views(App)
 
 
-setupLogging()
+setup_logging()
 
 assets_dir = str(get_asset_dir())
 logging.getLogger(__name__).info(

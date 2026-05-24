@@ -3,7 +3,7 @@ import flet as ft
 from state.app_state import AppState
 
 
-def subscribeEvents(appState: AppState) -> None:
+def subscribe_events(app_state: AppState) -> None:
 	page = ft.context.page
 
-	page.on_route_change = appState.route_change
+	page.on_route_change = app_state.route_change

@@ -40,7 +40,7 @@ class ExtrasFormatter(logging.Formatter):
 		return f"{base}\n{extra_json}"
 
 
-def setupLogging():
+def setup_logging():
 	formatter = ExtrasFormatter(
 		"%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 	)
