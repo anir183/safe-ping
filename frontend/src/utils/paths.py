@@ -30,7 +30,7 @@ def get_dev_root() -> Path | None:
 def get_logs_dir() -> Path:
 	dev_root = get_dev_root()
 
-	if dev_root:
+	if dev_root is not None:
 		log_dir = dev_root / PATHS_LOG_DIR
 	else:
 		log_dir = Path(
@@ -58,13 +58,15 @@ def get_asset_dir() -> Path:
 	dev_root = get_dev_root()
 	dev_assets = None
 
-	if dev_root:
+	if dev_root is not None:
 		dev_assets = (dev_root / PATHS_ASSET_DIR).resolve()
 
-	if env_assets and (dev_assets and not dev_assets.exists()):
+	if env_assets is not None and (
+		dev_assets is None or not dev_assets.exists()
+	):
 		return Path(env_assets).resolve()
 
-	assert dev_assets, f"{__name__}: dev assets directory is None"
+	assert dev_assets is not None, f"{__name__}: dev assets directory is None"
 	return dev_assets
 
 

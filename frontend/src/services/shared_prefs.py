@@ -9,6 +9,8 @@ _service = ft.SharedPreferences()
 
 
 async def store(key: str, value: SharedPreferencesValueType) -> None:
+	assert _service is not None
+
 	success = await _service.set(key, value)
 	if success:
 		logger.info(
@@ -29,6 +31,8 @@ async def store(key: str, value: SharedPreferencesValueType) -> None:
 
 
 async def retrieve(key: str) -> SharedPreferencesValueType | None:
+	assert _service is not None
+
 	data = await _service.get(key)
 	if data is not None:
 		logger.info(
