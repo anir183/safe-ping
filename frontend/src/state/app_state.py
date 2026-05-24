@@ -19,6 +19,21 @@ class AppState:
 	theme_mode: ft.ThemeMode = ft.ThemeMode.DARK
 	theme_color: ft.Colors = COLOR_PRIMARY_DARK
 
+	width: ft.Number = 0
+	height: ft.Number = 0
+
+	def on_resize(self):
+		self.width = ft.context.page.width or 0
+		self.height = ft.context.page.height or 0
+
+		logger.info(
+			"resized window",
+			extra={
+				"width": self.width,
+				"height": self.height,
+			},
+		)
+
 	async def load_theme(self):
 		mode = await pref_retrieve(PREF_THEME_MODE)
 
@@ -35,6 +50,7 @@ class AppState:
 			self.theme_color = COLOR_PRIMARY_DARK
 
 	__saving_task = None
+
 	def toggle_theme(self):
 		if self.__saving_task and not self.__saving_task.done():
 			return

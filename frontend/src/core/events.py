@@ -54,5 +54,6 @@ def subscribe_events(app_state: AppState) -> None:
 
 		_ = asyncio.create_task(app_state.load_theme())
 
+	page.on_resize = app_state.on_resize
 	ft.on_updated(update_theme, [app_state.theme_mode, app_state.theme_color])
 	ft.on_mounted(on_mounted)
