@@ -1,6 +1,6 @@
 [project]
 name = "safe-ping"
-version = "fd0b7059c1"
+version = "843f251c4a"
 description = "a secure workspace and chat app"
 readme = "docs/README.md"
 requires-python = ">=3.10"

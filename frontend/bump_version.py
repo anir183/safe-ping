@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 
 PYPROJECT = ROOT / "pyproject.toml"
-UTILS = ROOT / "src/constants/utils.py"
+INFO = ROOT / "src/constants/info.py"
 
 
 def get_git_hash() -> str:
@@ -34,24 +34,24 @@ def update_pyproject(version: str):
 	_ = PYPROJECT.write_text(content, encoding="utf-8")
 
 
-def update_utils(version: str):
-	content = UTILS.read_text(encoding="utf-8")
+def update_info(version: str):
+	content = INFO.read_text(encoding="utf-8")
 
 	content = re.sub(
-		r'^(\s*APP_VERSION:\s*str\s*=\s*)".*"$',
+		r'^(APP_VERSION\s*=\s*)".*"$',
 		rf'\1"{version}"',
 		content,
 		flags=re.MULTILINE,
 	)
 
-	_ = UTILS.write_text(content, encoding="utf-8")
+	_ = INFO.write_text(content, encoding="utf-8")
 
 
 def main():
 	version = get_git_hash()
 
 	update_pyproject(version)
-	update_utils(version)
+	update_info(version)
 
 	print(f"updated version -> {version}")
 

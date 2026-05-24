@@ -1,0 +1,7 @@
+import flet as ft
+
+COLOR_PRIMARY_DARK = ft.Colors.LIME
+COLOR_PRIMARY_LIGHT = ft.Colors.LIME_800
+
+COLOR_ALT_DARK = ft.Colors.PURPLE
+COLOR_ALT_LIGHT = ft.Colors.PURPLE_800

@@ -1,0 +1,21 @@
+LOGO = "icon.png"
+SPLASH_ANDROID = "splash_android.png"
+
+IMG_XS = 16
+IMG_SM = 24
+IMG_MD = 32
+IMG_LG = 48
+IMG_XL = 64
+IMG_XXL = 96
+
+AVATAR_SM = 16
+AVATAR_MD = 32
+AVATAR_LG = 48
+
+ICON_SM = 18
+ICON_MD = 24
+ICON_LG = 32
+
+LOGO_SM = 30
+LOGO_MD = 48
+LOGO_LG = 72

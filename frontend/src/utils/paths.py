@@ -3,8 +3,8 @@ from pathlib import Path
 
 from platformdirs import user_log_dir
 
+from constants.info import APP_VERSION
 from constants.utils import (
-	APP_VERSION,
 	ENV_ASSETS_DIR,
 	PATHS_ASSET_DIR,
 	PATHS_DEV_ROOT_DEPTH,
