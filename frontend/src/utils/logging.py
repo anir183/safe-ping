@@ -1,12 +1,10 @@
 import json
 import logging
 from logging.handlers import RotatingFileHandler
-from pathlib import Path
 from typing import final, override
 
-from platformdirs import user_log_dir
-
 from constants.utils import UtilConsts
+from utils.paths import get_log_file
 
 
 @final
@@ -41,20 +39,7 @@ def setupLogging():
 		"%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 	)
 
-	log_dir = Path(
-		user_log_dir(
-			appname=UtilConsts.LOG_DIR_APP_NAME,
-			appauthor=UtilConsts.LOG_DIR_APP_AUTHOR,
-			version=UtilConsts.APP_VERSION,
-		)
-	)
-
-	log_dir.mkdir(
-		parents=True,
-		exist_ok=True,
-	)
-
-	log_file = log_dir / UtilConsts.LOG_FILE_NAME
+	log_file = get_log_file()
 
 	file_handler = RotatingFileHandler(
 		log_file,
