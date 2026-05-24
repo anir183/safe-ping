@@ -34,7 +34,7 @@ LOG_FILE_ENCODING = "utf-8"
 
 PATHS_DEV_ROOT_DEPTH = 5
 PATHS_ROOT_RESOLUTION_FILE = "pyproject.toml"
-PATHS_ASSET_DIR = "assets"
+PATHS_DEV_ASSET_DIR = "assets"
 PATHS_LOG_DIR = "logs"
 PATHS_LOG_FILE_NAME = "app.log"
 PATHS_LOG_DIR_APP_NAME = "safe-ping"

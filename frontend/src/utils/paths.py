@@ -6,7 +6,7 @@ from platformdirs import user_log_dir
 from constants.info import APP_VERSION
 from constants.utils import (
 	ENV_ASSETS_DIR,
-	PATHS_ASSET_DIR,
+	PATHS_DEV_ASSET_DIR,
 	PATHS_DEV_ROOT_DEPTH,
 	PATHS_LOG_DIR,
 	PATHS_LOG_DIR_APP_AUTHOR,
@@ -59,16 +59,14 @@ def get_asset_dir() -> Path:
 	dev_assets = None
 
 	if dev_root is not None:
-		dev_assets = (dev_root / PATHS_ASSET_DIR).resolve()
+		dev_assets = (dev_root / PATHS_DEV_ASSET_DIR).resolve()
 
-	if env_assets is not None and (
-		dev_assets is None or not dev_assets.exists()
-	):
+	if env_assets is not None:
 		return Path(env_assets).resolve()
 
 	assert dev_assets is not None, f"{__name__}: dev assets directory is None"
 	return dev_assets
 
 
-def get_asset_path(rel_path: Path) -> Path:
+def get_asset_path(rel_path: Path | str) -> Path:
 	return get_asset_dir() / rel_path
