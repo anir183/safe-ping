@@ -44,13 +44,21 @@ def ContextWrapper(
 
 	theme_wrapped = ThemeContext(
 		value=theme_context,
-		callback=callback,
+		callback=lambda: ft.View(
+			route="/",
+			appbar=None,
+			controls=[
+				ft.SafeArea(
+					expand=True,
+					content=callback(),
+				),
+			],
+		),
 	)
 
 	route_wrapped = RouteContext(
-		value = route_context,
+		value=route_context,
 		callback=lambda: theme_wrapped,
 	)
 
 	return route_wrapped
-
