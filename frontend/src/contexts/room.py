@@ -1,6 +1,5 @@
 from collections.abc import Callable
 from dataclasses import dataclass
-from types import CoroutineType
 from typing import Any
 
 import flet as ft
@@ -17,7 +16,7 @@ class RoomContextValue:
 	room: Room | None
 	rooms: list[Room]
 	open_section: str | None
-	refresh: Callable[[], CoroutineType[Any, Any, None]]
+	refresh: Callable[[], Any]
 	open: Callable[[str | None, str | None], None]
 	close: Callable[[], None]
 

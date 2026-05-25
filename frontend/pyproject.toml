@@ -1,6 +1,6 @@
 [project]
 name = "safe-ping"
-version = "0.0.0"
+version = "0.0.70"
 description = "a secure workspace and chat app"
 readme = "docs/README.md"
 requires-python = ">=3.10"
@@ -25,13 +25,16 @@ dev = [
 
 [tool.flet]
 desktop_flavor = "light"
-org = "dev.is-a.ani183"
-product = "safe-ping"
+org = "io.github.anir183"
+product = "SafePing"
 company = "Flet"
 copyright = "Copyright (C) 2023-2026 by Flet"
 
 [tool.flet.app]
 path = "src"
+
+[tool.flet.android]
+bundle_id = "io.github.anir183.safeping"
 
 [tool.ruff]
 line-length = 80
