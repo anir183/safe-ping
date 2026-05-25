@@ -3,6 +3,7 @@ import platform
 import flet as ft
 import flet.version
 
+from constants.fonts import FONT_MONO
 from constants.info import APP_AUTHORS, APP_TITLE, APP_VERSION
 from constants.spacing import SPACE_SM
 
@@ -20,7 +21,7 @@ def show_info_dialog():
 					ft.Text(f"Flet version: {flet.version.flet_version}"),
 					ft.Text(f"Flutter version: {flet.version.flutter_version}"),
 					ft.Text(f"Python version: {platform.python_version()}"),
-					ft.Text(f"\n{APP_AUTHORS}", font_family="Monospace"),
+					ft.Text(f"\n{APP_AUTHORS}", font_family=FONT_MONO),
 				],
 			),
 			actions=[

@@ -1,5 +1,5 @@
 APP_TITLE = "Safe Ping"
-APP_VERSION = "67964626a8"
+APP_VERSION = "bb87d49a13"
 APP_AUTHORS = """
 Anirban RoyChowdhury    anirbanrc@proton.me
 Arka Bangal             abangal2005@gmail.com
