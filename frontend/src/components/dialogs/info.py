@@ -21,13 +21,14 @@ def show_info_dialog():
 					ft.Text(f"Flet version: {flet.version.flet_version}"),
 					ft.Text(f"Flutter version: {flet.version.flutter_version}"),
 					ft.Text(f"Python version: {platform.python_version()}"),
-					ft.Text(f"\n{APP_AUTHORS}", font_family=FONT_MONO),
+					ft.Text(
+						f"\n{APP_AUTHORS}",
+						font_family=FONT_MONO,
+					),
 				],
 			),
 			actions=[
-				ft.TextButton(
-					"Close", on_click=lambda _: page.pop_dialog()
-				)
+				ft.TextButton("Close", on_click=lambda _: page.pop_dialog())
 			],
 		)
 	)

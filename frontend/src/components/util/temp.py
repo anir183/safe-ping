@@ -3,6 +3,7 @@ import flet as ft
 from components.dialogs.info import show_info_dialog
 from components.util.platform import PlatformComponent
 from components.util.responsive import ResponsiveComponent
+from constants.routes import ROUTE_APP
 from constants.spacing import SPACE_MD
 from contexts.room import RoomContext
 from contexts.theme import ThemeContext
@@ -42,6 +43,10 @@ def Temp() -> ft.Control:
 					large=lambda: ft.Text("Large"),
 					extra_large=lambda: ft.Text("XLarge"),
 					fallback=lambda: ft.Text("Fallback"),
+				),
+				ft.Button(
+					"app",
+					on_click=lambda: ft.context.page.navigate(ROUTE_APP),
 				),
 				ft.Button(
 					f"{theme_context.mode.value}",

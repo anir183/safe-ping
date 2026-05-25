@@ -1,2 +1,2 @@
 ROUTE_ROOT = "/"
-ROUTE_HOME = "/home"
+ROUTE_APP = "/app"
