@@ -4,30 +4,35 @@ import logging
 import flet as ft
 
 from constants.dimensions import DIM_WIN_MIN_HEIGHT, DIM_WIN_MIN_WIDTH
-from constants.fonts import FONT_BODY, FONT_FILES
+from constants.fonts import FONT_FILES
 from constants.info import APP_TITLE
-from state.app_state import AppState
+from state.theme_state import ThemeState
 
 logger = logging.getLogger(__name__)
 
+__is_subscribed = False
 
-def subscribe_events(app_state: AppState) -> None:
+
+def subscribe_events(theme_state: ThemeState) -> None:
+	global __is_subscribed
+
+	if __is_subscribed:
+		return
+
 	page = ft.context.page
 
 	def update_theme():
 		logger.info(
 			"theme mode changed",
 			extra={
-				"theme-mode": app_state.theme_mode,
-				"theme-color": app_state.theme_color,
+				"theme-mode": theme_state.theme_mode,
+				"theme-primary": theme_state.theme_primary,
+				"theme-secondary": theme_state.theme_secondary,
 			},
 		)
 
-		page.theme_mode = app_state.theme_mode
-		page.theme = page.dark_theme = ft.Theme(
-			color_scheme_seed=app_state.theme_color,
-			font_family=FONT_BODY,
-		)
+		page.theme_mode = theme_state.theme_mode
+		page.theme = page.dark_theme = theme_state.theme_primary
 
 	def on_mounted():
 		logger.info(
@@ -52,8 +57,15 @@ def subscribe_events(app_state: AppState) -> None:
 		page.window.min_width = DIM_WIN_MIN_WIDTH
 		page.window.min_height = DIM_WIN_MIN_HEIGHT
 
-		_ = asyncio.create_task(app_state.load_theme())
+		_ = asyncio.create_task(theme_state.load_theme())
 
-	page.on_resize = app_state.on_resize
-	ft.on_updated(update_theme, [app_state.theme_mode, app_state.theme_color])
+	page.on_resize = theme_state.on_resize
+	ft.on_updated(
+		update_theme,
+		[
+			theme_state.theme_mode,
+			theme_state.theme_primary,
+		],
+	)
 	ft.on_mounted(on_mounted)
+	__is_subscribed = True

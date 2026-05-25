@@ -4,30 +4,35 @@ from constants.routes import ROUTE_ROOT
 from contexts.theme import ThemeContext, ThemeContextValue
 from core.events import subscribe_events
 from core.router import Router
-from state.app_state import AppState
+from state.theme_state import ThemeState
 
 
 @ft.component
 def App() -> ft.Control:
-	app_state, _ = ft.use_state(
-		initial=AppState(route=ft.context.page.route),
+	theme_state, _ = ft.use_state(
+		initial=ThemeState(route=ft.context.page.route),
 	)
 
-	subscribe_events(app_state)
+	subscribe_events(theme_state)
 
 	toggle_mode = ft.use_callback(
-		lambda: app_state.toggle_theme(),
+		lambda: theme_state.toggle_theme(),
+		dependencies=[
+			theme_state.theme_mode,
+		],
 	)
 
 	theme_context = ft.use_memo(
 		lambda: ThemeContextValue(
-			mode=app_state.theme_mode,
-			seed_color=app_state.theme_color,
+			mode=theme_state.theme_mode,
+			primary=theme_state.theme_primary,
+			secondary=theme_state.theme_secondary,
 			toggle_mode=toggle_mode,
 		),
 		dependencies=[
-			app_state.theme_mode,
-			app_state.theme_color,
+			theme_state.theme_mode,
+			theme_state.theme_primary,
+			theme_state.theme_secondary,
 			toggle_mode,
 		],
 	)
