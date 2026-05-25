@@ -1,5 +1,7 @@
 import flet as ft
 
+from components.app_bar import MobileAppBar
+from components.app_header import AppHeader
 from constants.routes import ROUTE_ROOT
 from contexts.theme import ThemeContext, ThemeContextValue
 from core.events import subscribe_events
@@ -41,8 +43,9 @@ def App() -> ft.Control:
 		value=theme_context,
 		callback=lambda: ft.View(
 			route=ROUTE_ROOT,
-			appbar=None,
+			appbar=MobileAppBar(),
 			controls=[
+				AppHeader(),
 				ft.SafeArea(
 					expand=True,
 					content=Router(),

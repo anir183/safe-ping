@@ -8,7 +8,8 @@ from constants.spacing import SPACE_SM
 
 
 def show_info_dialog():
-	ft.context.page.show_dialog(
+	page = ft.context.page
+	page.show_dialog(
 		ft.AlertDialog(
 			title=ft.Text("Info @ " + APP_TITLE),
 			content=ft.Column(
@@ -24,7 +25,7 @@ def show_info_dialog():
 			),
 			actions=[
 				ft.TextButton(
-					"Close", on_click=lambda _: ft.context.page.pop_dialog()
+					"Close", on_click=lambda _: page.pop_dialog()
 				)
 			],
 		)
