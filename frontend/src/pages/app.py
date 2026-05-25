@@ -1,6 +1,6 @@
 import flet as ft
 
-from components.app.room_nav import RoomNav
+from components.app.room import RoomPane
 from contexts.room import RoomContext, RoomContextValue
 from state.room_state import RoomState
 
@@ -42,17 +42,7 @@ def AppPage() -> ft.Control:
 
 	room_wrapped = RoomContext(
 		value=room_context,
-		callback=lambda: ft.Row(
-			expand=True,
-			controls=[
-				RoomNav(),
-				ft.Container(
-					expand=True,
-					alignment=ft.Alignment.CENTER,
-					content=ft.Text(room_context.room_id or "Dashboard"),
-				),
-			],
-		),
+		callback=RoomPane,
 	)
 
 	return room_wrapped
