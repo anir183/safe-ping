@@ -2,53 +2,42 @@ from typing import Callable
 
 import flet as ft
 
-from components.primitives.empty import Empty
 from components.styles.button_style import ButtonStyle
-from constants.dimensions import DIM_DRAWER_WIDTH
+from constants.dimensions import DIM_RAIL_WIDTH
 from constants.spacing import SPACE_MD, SPACE_SM
 
 
 @ft.component
-def NavDrawer(
+def NavRail(
 	*,
-	is_dismissible: bool,
 	is_right: bool = False,
-	is_hidden: Callable[[], bool],
-	set_hidden: Callable[[bool], None],
 	controls: list[ft.Control],
+	expand: Callable[[], None] | None,
 ) -> ft.Control:
-	if not is_hidden():
-		return Empty()
-
 	return ft.Row(
 		controls=[
 			*(is_right and [ft.VerticalDivider(width=1)] or []),
 			ft.Container(
-				width=DIM_DRAWER_WIDTH,
+				width=DIM_RAIL_WIDTH,
 				padding=SPACE_MD,
 				content=ft.Column(
 					expand=True,
 					spacing=SPACE_SM,
-					horizontal_alignment=(
-						is_right
-						and ft.CrossAxisAlignment.END
-						or ft.CrossAxisAlignment.START
-					),
+					horizontal_alignment=(ft.CrossAxisAlignment.CENTER),
 					controls=[
 						*(
-							is_dismissible
+							expand is not None
 							and [
 								ft.IconButton(
-									icon=ft.Icons.MENU_OPEN,
-									flip=ft.Flip(flip_x=is_right),
-									tooltip="close navigation",
-									on_click=lambda _: set_hidden(False),
+									icon=ft.Icons.MENU,
+									tooltip="Open navigation",
 									style=ButtonStyle(),
+									on_click=expand,
 								)
 							]
 							or []
 						),
-						*(controls),
+						*controls,
 					],
 				),
 			),

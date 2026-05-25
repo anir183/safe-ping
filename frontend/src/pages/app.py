@@ -1,18 +1,12 @@
 import flet as ft
 
-from components.app.room_list import RoomsList
-from components.nav_drawer import NavDrawer
-from components.styles.button_style import ButtonStyle
-from constants.routes import ROUTE_ROOT
+from components.app.room_nav import RoomNav
 from contexts.room import RoomContext, RoomContextValue
-from repos.mock.room import MockRoomRepository
 from state.room_state import RoomState
 
 
 @ft.component
 def AppPage() -> ft.Control:
-	drawer_expanded, set_drawer_expanded = ft.use_state(True)
-
 	room_state, _ = ft.use_state(RoomState(room_id=None))
 
 	open_room = ft.use_callback(
@@ -48,21 +42,15 @@ def AppPage() -> ft.Control:
 
 	room_wrapped = RoomContext(
 		value=room_context,
-		callback=lambda: NavDrawer(
-			is_dismissible=True,
-			is_hidden=lambda: drawer_expanded,
-			set_hidden=set_drawer_expanded,
+		callback=lambda: ft.Row(
+			expand=True,
 			controls=[
-				ft.TextButton(
-					width=float("inf"),
-					icon=ft.Icons.DASHBOARD,
-					content="Dashboard",
-					on_click=lambda: ft.context.page.navigate(ROUTE_ROOT),
-					style=ButtonStyle(),
+				RoomNav(),
+				ft.Container(
+					expand=True,
+					alignment=ft.Alignment.CENTER,
+					content=ft.Text(room_context.room_id or "Dashboard"),
 				),
-				ft.Divider(),
-				ft.Text(room_context.room_id or "None"),
-				RoomsList(repo=MockRoomRepository()),
 			],
 		),
 	)
