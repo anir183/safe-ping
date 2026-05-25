@@ -26,8 +26,8 @@ def subscribe_events(theme_state: ThemeState) -> None:
 			"theme mode changed",
 			extra={
 				"theme-mode": theme_state.theme_mode,
-				"theme-primary": theme_state.theme_primary,
-				"theme-secondary": theme_state.theme_secondary,
+				"theme-primary": theme_state.theme_primary.color_scheme_seed,
+				"theme-secondary": theme_state.theme_secondary.color_scheme_seed,
 			},
 		)
 
