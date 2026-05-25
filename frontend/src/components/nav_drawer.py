@@ -5,8 +5,7 @@ import flet as ft
 from components.primitives.empty import Empty
 from components.styles.button_style import ButtonStyle
 from constants.dimensions import DIM_DRAWER_WIDTH
-from constants.spacing import SPACE_LG, SPACE_MD, SPACE_SM
-from constants.styles import STYLE_RADIUS_MD
+from constants.spacing import SPACE_MD, SPACE_SM
 
 
 @ft.component
@@ -45,7 +44,7 @@ def NavDrawer(
 									flip=ft.Flip(flip_x=is_right),
 									tooltip="close navigation",
 									on_click=lambda _: set_hidden(False),
-									style=ButtonStyle()
+									style=ButtonStyle(),
 								)
 							]
 							or []

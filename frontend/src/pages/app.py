@@ -1,24 +1,12 @@
 import flet as ft
-from flet.utils import random_string
 
+from components.app.room_list import RoomsList
 from components.nav_drawer import NavDrawer
 from components.styles.button_style import ButtonStyle
 from constants.routes import ROUTE_ROOT
 from contexts.room import RoomContext, RoomContextValue
+from repos.mock.room import MockRoomRepository
 from state.room_state import RoomState
-
-
-@ft.component
-def Test():
-	room_context = ft.use_context(RoomContext)
-
-	return ft.TextButton(
-		width=float("inf"),
-		icon=ft.Icons.ROOM,
-		content=f"room: {room_context.room_id}",
-		on_click=lambda: room_context.open_room(random_string(5), None),
-		style=ButtonStyle(),
-	)
 
 
 @ft.component
@@ -67,19 +55,14 @@ def AppPage() -> ft.Control:
 			controls=[
 				ft.TextButton(
 					width=float("inf"),
-					icon=ft.Icons.HOME_OUTLINED,
-					content="root",
+					icon=ft.Icons.DASHBOARD,
+					content="Dashboard",
 					on_click=lambda: ft.context.page.navigate(ROUTE_ROOT),
 					style=ButtonStyle(),
 				),
-				Test(),
-				ft.TextButton(
-					width=float("inf"),
-					icon=ft.Icons.HOME_OUTLINED,
-					content="close room",
-					on_click=room_context.close_room,
-					style=ButtonStyle(),
-				),
+				ft.Divider(),
+				ft.Text(room_context.room_id or "None"),
+				RoomsList(repo=MockRoomRepository()),
 			],
 		),
 	)
