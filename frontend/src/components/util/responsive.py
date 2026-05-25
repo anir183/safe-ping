@@ -2,6 +2,7 @@ from collections.abc import Callable
 
 import flet as ft
 
+from components.primitives.empty import Empty
 from utils.responsive import is_extra_large, is_large, is_medium, is_small
 
 def ResponsiveComponent(
@@ -27,7 +28,4 @@ def ResponsiveComponent(
 	if fallback is not None:
 		return fallback()
 
-	return ft.Container(
-		width=0,
-		height=0,
-	)
+	return Empty()

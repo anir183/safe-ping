@@ -11,9 +11,7 @@ from state.theme_state import ThemeState
 
 @ft.component
 def App() -> ft.Control:
-	theme_state, _ = ft.use_state(
-		initial=ThemeState(route=ft.context.page.route),
-	)
+	theme_state, _ = ft.use_state(ThemeState(route=ft.context.page.route))
 
 	subscribe_events(theme_state)
 

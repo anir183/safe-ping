@@ -2,6 +2,7 @@ from collections.abc import Callable
 
 import flet as ft
 
+from components.primitives.empty import Empty
 from utils.platform import is_desktop, is_web, is_mobile
 
 def PlatformComponent(
@@ -22,8 +23,6 @@ def PlatformComponent(
 
 	if fallback is not None:
 		return fallback()
+	
+	return Empty()
 
-	return ft.Container(
-		width=0,
-		height=0,
-	)
