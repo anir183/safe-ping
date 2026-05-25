@@ -7,6 +7,7 @@ from constants.room import ROOM_SECTION_CHAT
 from models.room import Room
 from repos.mock.room import MockRoomRepository
 from repos.rooms import RoomsRepository
+from utils.responsive import is_small
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ class RoomState:
 	rooms: list[Room]
 	room: Room | None = None
 
-	open_section: str = ROOM_SECTION_CHAT
+	open_section: str | None = ROOM_SECTION_CHAT
 	repo: RoomsRepository = MockRoomRepository()
 
 	async def refresh_rooms(self):
@@ -29,13 +30,14 @@ class RoomState:
 			None,
 		)
 		self.room = room
-		self.open_section = section is not None and section or ROOM_SECTION_CHAT
+		self.open_section = section
 
 		logger.info(
 			"opened room",
 			extra={
 				"room": self.room,
 				"open-section": self.open_section,
+				"section": section,
 			},
 		)
 
@@ -48,4 +50,4 @@ class RoomState:
 		)
 
 		self.room = None
-		self.open_section = ROOM_SECTION_CHAT
+		self.open_section = is_small() and None or ROOM_SECTION_CHAT

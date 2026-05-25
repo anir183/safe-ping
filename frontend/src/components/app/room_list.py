@@ -10,6 +10,7 @@ from constants.styles import STYLE_RADIUS_MD
 from contexts.room import RoomContext
 from contexts.theme import ThemeContext
 from models.room import Room
+from utils.responsive import is_small
 
 
 @ft.component
@@ -22,10 +23,10 @@ def RoomList(
 	theme_context = ft.use_context(ThemeContext)
 
 	def switch_room(id: str):
-		room_context.open(
-			id,
-			ROOM_SECTION_CHAT,
-		)
+		if is_small():
+			room_context.open(id, None)
+		else:
+			room_context.open(id, ROOM_SECTION_CHAT)
 
 	def room_initials(name: str) -> str:
 		parts = name.strip().split()
