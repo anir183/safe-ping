@@ -1,5 +1,6 @@
 import flet as ft
 
+from components.dialogs.info import show_info_dialog
 from components.platform import PlatformComponent
 from components.responsive import ResponsiveComponent
 from constants.spacing import SPACE_MD
@@ -49,6 +50,10 @@ def Temp() -> ft.Control:
 				ft.Button(
 					"room",
 					on_click=change_room,
+				),
+				ft.Button(
+					"info",
+					on_click=show_info_dialog,
 				),
 			],
 		),
