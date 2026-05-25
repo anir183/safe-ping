@@ -1,6 +1,6 @@
 import flet as ft
 
-from components.temp import Temp
+from components.util.temp import Temp
 from contexts.room import RoomContext, RoomContextValue
 from state.room_state import RoomState
 

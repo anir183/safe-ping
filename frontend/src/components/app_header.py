@@ -1,7 +1,7 @@
 import flet as ft
 
 from components.dialogs.info import show_info_dialog
-from components.platform import PlatformComponent
+from components.util.platform import PlatformComponent
 from components.primitives.logo import Logo
 from components.primitives.theme_toggle import ThemeToggle
 from constants.dimensions import DIM_APP_HEADER_HEIGHT

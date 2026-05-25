@@ -3,6 +3,7 @@ import flet as ft
 from components.dialogs.info import show_info_dialog
 from components.primitives.logo import Logo
 from components.primitives.theme_toggle import ThemeToggle
+from constants.spacing import SPACE_LG
 from utils.platform import is_mobile
 
 
@@ -21,6 +22,7 @@ def MobileAppBar():
 						ft.PopupMenuItem(
 							content="About",
 							icon=ft.Icons.INFO_OUTLINE,
+							padding=ft.Padding.symmetric(horizontal=SPACE_LG),
 							on_click=show_info_dialog,
 						)
 					],

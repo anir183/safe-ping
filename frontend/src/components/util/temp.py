@@ -1,8 +1,8 @@
 import flet as ft
 
 from components.dialogs.info import show_info_dialog
-from components.platform import PlatformComponent
-from components.responsive import ResponsiveComponent
+from components.util.platform import PlatformComponent
+from components.util.responsive import ResponsiveComponent
 from constants.spacing import SPACE_MD
 from contexts.room import RoomContext
 from contexts.theme import ThemeContext
