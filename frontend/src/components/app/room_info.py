@@ -37,7 +37,13 @@ def RoomInfo(repo: UserRepository, compact: bool = False):
 	def fetch_members():
 		_ = asyncio.create_task(get_room_members())
 
-	ft.use_effect(fetch_members, [room_context.room, room_context.open_section,])
+	ft.use_effect(
+		fetch_members,
+		[
+			room_context.room,
+			room_context.open_section,
+		],
+	)
 	if is_small():
 		fetch_members()
 

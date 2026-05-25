@@ -50,7 +50,7 @@ def update_info(version: str):
 def main():
 	version = get_git_hash()
 
-	update_pyproject(version)
+	# update_pyproject(version)
 	update_info(version)
 
 	print(f"updated version -> {version}")
