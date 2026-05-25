@@ -1,2 +1,2 @@
 APP_TITLE = "Safe Ping"
-APP_VERSION = "76cde20942"
+APP_VERSION = "ba93b407f3"
