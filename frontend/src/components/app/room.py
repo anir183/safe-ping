@@ -15,7 +15,7 @@ def RoomPane():
 				expand=True,
 				alignment=ft.Alignment.CENTER,
 				content=ft.Text(
-					room_context.room and room_context.room.id or "Dashboard"
+					room_context.room and room_context.room.name or "Dashboard"
 				),
 			),
 		],
