@@ -3,7 +3,7 @@ import flet as ft
 from components.primitives.avatar import CircAvatar
 from components.styles.button_style import ButtonStyle
 from constants.fonts import FONT_HEADER
-from constants.images import AVATAR_MD, ICON_SM
+from constants.images import AVATAR_MD, ICON_MD, ICON_SM
 from constants.room import ROOM_SECTION_CHAT
 from constants.spacing import SPACE_LG, SPACE_SM, SPACE_XS
 from constants.styles import STYLE_RADIUS_MD
@@ -63,6 +63,22 @@ def RoomList(
 					),
 				),
 				ft.Divider(),
+				*(
+					[
+						ft.Container(
+							tooltip="Loading...",
+							border_radius=STYLE_RADIUS_MD,
+							padding=SPACE_SM,
+							content=ft.Icon(
+								ft.Icons.DOWNLOADING,
+								size=ICON_MD,
+								color=theme_context.primary.color_scheme_seed,
+							),
+						),
+					]
+					if len(rooms) <= 0
+					else []
+				),
 				*[
 					ft.Container(
 						tooltip=room.name,
@@ -108,6 +124,18 @@ def RoomList(
 				"Chat Rooms",
 				margin=SPACE_XS,
 				font_family=FONT_HEADER,
+			),
+			*(
+				[
+					ft.TextButton(
+						width=float("inf"),
+						icon=ft.Icons.DOWNLOADING,
+						content="Loading...",
+						style=ButtonStyle(),
+					),
+				]
+				if len(rooms) <= 0
+				else []
 			),
 			*[
 				ft.TextButton(

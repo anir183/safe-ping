@@ -1,23 +1,18 @@
 import flet as ft
 
+from components.app.chat import ChatPage
+from components.app.dashboard import Dashboard
+from components.app.notes import NotesPage
 from components.app.room_info import RoomInfo, RoomInfoBar
 from components.app.room_nav import RoomNav
+from components.app.whiteboard import WhiteboardPage
 from components.styles.button_style import ButtonStyle
 from components.util.responsive import ResponsiveComponent
-from constants.dimensions import DIM_APP_HEADER_HEIGHT
 from constants.fonts import FONT_HEADER
 from constants.spacing import SPACE_MD, SPACE_NONE
 from contexts.room import RoomContext
 from repos.mock.user import MockUserRepository
 from utils.responsive import is_small
-
-
-@ft.component
-def ConditionalPage():
-	return ft.Container(
-		expand=True,
-		content=ft.Placeholder(),
-	)
 
 
 @ft.component
@@ -60,7 +55,10 @@ def MainContent():
 				if is_small()
 				else []
 			),
-			ConditionalPage(),
+			Dashboard(),
+			ChatPage(),
+			WhiteboardPage(),
+			NotesPage(),
 		],
 	)
 
@@ -82,6 +80,7 @@ def RoomPane():
 			controls=[
 				RoomNav(),
 				RoomInfo(repo=MockUserRepository()),
+				Dashboard(),
 			],
 		),
 		fallback=lambda: ft.Row(

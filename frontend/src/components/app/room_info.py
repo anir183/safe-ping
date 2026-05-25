@@ -9,7 +9,7 @@ from components.primitives.empty import Empty
 from components.primitives.user_entry import UserMenuExpanded, user_initials
 from components.styles.button_style import ButtonStyle
 from constants.fonts import FONT_HEADER
-from constants.images import AVATAR_MD, ICON_SM
+from constants.images import AVATAR_MD, ICON_MD, ICON_SM
 from constants.room import (
 	ROOM_SECTION_CHAT,
 	ROOM_SECTION_NOTES,
@@ -34,10 +34,12 @@ def RoomInfo(repo: UserRepository, compact: bool = False):
 	async def get_room_members():
 		set_members(await repo.get_users())
 
-	async def fetch_members():
+	def fetch_members():
 		_ = asyncio.create_task(get_room_members())
 
-	ft.use_effect(fetch_members, [])
+	ft.use_effect(fetch_members, [room_context.room, room_context.open_section,])
+	if is_small():
+		fetch_members()
 
 	if compact:
 		theme_context = ft.use_context(ThemeContext)
@@ -109,6 +111,22 @@ def RoomInfo(repo: UserRepository, compact: bool = False):
 					expand=True,
 					spacing=SPACE_XL,
 					controls=[
+						*(
+							[
+								ft.Container(
+									tooltip="Loading...",
+									border_radius=STYLE_RADIUS_MD,
+									padding=SPACE_SM,
+									content=ft.Icon(
+										ft.Icons.DOWNLOADING,
+										size=ICON_MD,
+										color=theme_context.primary.color_scheme_seed,
+									),
+								),
+							]
+							if len(members) <= 0
+							else []
+						),
 						*[
 							CircAvatar(
 								fallback=user_initials(member),
@@ -186,6 +204,18 @@ def RoomInfo(repo: UserRepository, compact: bool = False):
 				expand=True,
 				spacing=SPACE_SM,
 				controls=[
+					*(
+						[
+							ft.TextButton(
+								width=float("inf"),
+								icon=ft.Icons.DOWNLOADING,
+								content="Loading...",
+								style=ButtonStyle(),
+							),
+						]
+						if len(members) <= 0
+						else []
+					),
 					*[UserMenuExpanded(user=member) for member in members],
 				],
 			),
