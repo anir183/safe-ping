@@ -1,24 +1,33 @@
 from collections.abc import Callable
 from dataclasses import dataclass
+from types import CoroutineType
+from typing import Any
 
 import flet as ft
 
 from constants.room import ROOM_SECTION_CHAT
+from models.room import Room
 
+async def noop_refresh() -> None:
+	pass
 
 @dataclass(frozen=True)
 class RoomContextValue:
-	room_id: str | None
+	room: Room | None
+	rooms: list[Room]
 	open_section: str
-	open_room: Callable[[str | None, str | None], None]
-	close_room: Callable[[], None]
+	refresh: Callable[[], CoroutineType[Any, Any, None]]
+	open: Callable[[str | None, str | None], None]
+	close: Callable[[], None]
 
 
 RoomContext = ft.create_context(
 	RoomContextValue(
-		room_id=None,
+		room=None,
+		rooms=[],
 		open_section=ROOM_SECTION_CHAT,
-		open_room=lambda _, __: None,
-		close_room=lambda: None,
+		refresh=noop_refresh,
+		open=lambda _, __: None,
+		close=lambda: None,
 	),
 )

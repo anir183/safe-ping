@@ -11,9 +11,39 @@ class MockRoomRepository(RoomsRepository):
 		await asyncio.sleep(1)
 
 		return [
-			Room(1, "Tom's Room", 4, [1, 2, 3], "https://i.pravatar.cc/100"),
-			Room(2, "Bob's Room", 2, [2, 4], "https://i.pravatar.cc/100"),
-			Room(3, "Max's Room", 3, [4, 1, 5], "https://i.pravatar.cc/100"),
-			Room(4, "Alice's Room", 1, [4, 5], "https://i.pravatar.cc/100"),
-			Room(5, "Elise's Room", 5, [5, 1, 2, 4, 3], "https://i.pravatar.cc/100"),
+			Room(
+				"1",
+				"Tom's Room",
+				"4",
+				["1", "2", "3"],
+				"https://i.pravatar.cc/100",
+			),
+			Room(
+				"2",
+				"Bob's Room",
+				"2",
+				["2", "4"],
+				"https://i.pravatar.cc/100",
+			),
+			Room(
+				"3",
+				"Max's Room",
+				"3",
+				["4", "1", "5"],
+				"https://i.pravatar.cc/100",
+			),
+			Room(
+				"4",
+				"Alice's Room",
+				"1",
+				["4", "5"],
+				"https://i.pravatar.cc/100",
+			),
+			Room(
+				"5",
+				"Elise's Room",
+				"5",
+				["5", "1", "2", "4", "3"],
+				"https://i.pravatar.cc/100",
+			),
 		]

@@ -5,7 +5,7 @@ import flet as ft
 from components.app.room_list import RoomList
 from components.nav_drawer import NavDrawer
 from components.nav_rail import NavRail
-from repos.mock.room import MockRoomRepository
+from contexts.room import RoomContext
 from utils.responsive import is_extra_large, is_large, is_medium, is_small
 
 
@@ -14,15 +14,9 @@ def RoomNav():
 	drawer_expanded, set_drawer_expanded = ft.use_state(
 		is_large() or is_extra_large()
 	)
+	room_context = ft.use_context(RoomContext)
 
-	rooms, set_rooms = ft.use_state([])
-
-	repo = MockRoomRepository()
-
-	async def list_rooms():
-		set_rooms(await repo.get_rooms())
-
-	ft.use_effect(lambda: asyncio.create_task(list_rooms()), [])
+	ft.use_effect(lambda: asyncio.create_task(room_context.refresh()), [])
 
 	drawer = NavDrawer(
 		is_dismissible=is_small() or is_medium(),
@@ -30,7 +24,7 @@ def RoomNav():
 		set_hidden=set_drawer_expanded,
 		controls=[
 			RoomList(
-				rooms=rooms,
+				rooms=room_context.rooms,
 				compact=False,
 			)
 		],
@@ -40,7 +34,7 @@ def RoomNav():
 		expand=lambda: set_drawer_expanded(True),
 		controls=[
 			RoomList(
-				rooms=rooms,
+				rooms=room_context.rooms,
 				compact=True,
 			)
 		],

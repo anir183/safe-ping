@@ -11,9 +11,9 @@ class MockMessagesRepository(MessagesRepository):
 		await asyncio.sleep(1)
 
 		return [
-			Message(1, 1, "Message from Alice", ""),
-			Message(2, 2, "Message from Bob", ""),
-			Message(3, 3, "Message from Max", ""),
-			Message(4, 4, "Message from Tom", ""),
-			Message(5, 5, "Message from Elise", ""),
+			Message("1", "1", "Message from Alice", "12 Sat"),
+			Message("2", "2", "Message from Bob", "12 Sat"),
+			Message("3", "3", "Message from Max", "11 Sun"),
+			Message("4", "4", "Message from Tom", "12 Sun"),
+			Message("5", "5", "Message from Elise", "13 Sun"),
 		]

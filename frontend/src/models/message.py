@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Message:
-	id: int
-	sender_id: int
+	id: str
+	sender_id: str
 	content: str
 	timestamp: str

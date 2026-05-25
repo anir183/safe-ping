@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Room:
-	id: int
+	id: str
 	name: str
-	owner_id: int
-	member_ids: list[int]
+	owner_id: str
+	member_ids: list[str]
 	avatar: str

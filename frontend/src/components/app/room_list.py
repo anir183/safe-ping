@@ -21,9 +21,9 @@ def RoomList(
 	room_context = ft.use_context(RoomContext)
 	theme_context = ft.use_context(ThemeContext)
 
-	def switch_room(name: str):
-		room_context.open_room(
-			name,
+	def switch_room(id: str):
+		room_context.open(
+			id,
 			ROOM_SECTION_CHAT,
 		)
 
@@ -38,7 +38,7 @@ def RoomList(
 
 		return (parts[0][0] + parts[-1][0]).upper()
 
-	dashboard_selected = room_context.room_id is None
+	dashboard_selected = room_context.room is None
 
 	if compact:
 		return ft.ListView(
@@ -54,7 +54,7 @@ def RoomList(
 						else None
 					),
 					padding=SPACE_SM,
-					on_click=lambda _: room_context.close_room(),
+					on_click=lambda _: room_context.close(),
 					content=ft.Icon(
 						ft.Icons.DASHBOARD,
 						size=ICON_SM,
@@ -68,13 +68,12 @@ def RoomList(
 						border_radius=STYLE_RADIUS_MD,
 						bgcolor=(
 							ft.Colors.SURFACE_CONTAINER_HIGHEST
-							if room_context.room_id == room.name
+							if room_context.room
+							and room_context.room.name == room.name
 							else None
 						),
 						padding=SPACE_XS,
-						on_click=lambda _, room_name=room.name: switch_room(
-							room_name
-						),
+						on_click=lambda _, id=room.id: switch_room(id),
 						content=CircAvatar(
 							room_initials(room.name),
 							room.avatar,
@@ -94,7 +93,7 @@ def RoomList(
 				width=float("inf"),
 				icon=ft.Icons.DASHBOARD,
 				content="Dashboard",
-				on_click=room_context.close_room,
+				on_click=room_context.close,
 				style=ButtonStyle(
 					bgcolor=(
 						ft.Colors.SURFACE_CONTAINER_HIGHEST
@@ -126,13 +125,12 @@ def RoomList(
 							),
 						],
 					),
-					on_click=lambda _, room_name=room.name: switch_room(
-						room_name
-					),
+					on_click=lambda _, id=room.id: switch_room(id),
 					style=ButtonStyle(
 						bgcolor=(
 							ft.Colors.SURFACE_CONTAINER_HIGHEST
-							if room_context.room_id == room.name
+							if room_context.room
+							and room_context.room.name == room.name
 							else None
 						),
 					),
