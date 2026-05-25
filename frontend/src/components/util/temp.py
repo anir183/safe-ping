@@ -5,20 +5,12 @@ from components.util.platform import PlatformComponent
 from components.util.responsive import ResponsiveComponent
 from constants.routes import ROUTE_APP
 from constants.spacing import SPACE_MD
-from contexts.room import RoomContext
 from contexts.theme import ThemeContext
 
 
 @ft.component
 def Temp() -> ft.Control:
-	room_context = ft.use_context(RoomContext)
 	theme_context = ft.use_context(ThemeContext)
-
-	def change_room():
-		if room_context.room_id is None:
-			room_context.open_room("test", None)
-		else:
-			room_context.close_room()
 
 	return ft.Container(
 		expand=True,
@@ -29,7 +21,6 @@ def Temp() -> ft.Control:
 			horizontal_alignment=ft.CrossAxisAlignment.CENTER,
 			spacing=SPACE_MD,
 			controls=[
-				ft.Text(f"Room: {room_context.room_id}"),
 				ft.Text(f"{ft.context.page.width} x {ft.context.page.height}"),
 				PlatformComponent(
 					desktop=lambda: ft.Text("Desktop"),
@@ -51,10 +42,6 @@ def Temp() -> ft.Control:
 				ft.Button(
 					f"{theme_context.mode.value}",
 					on_click=theme_context.toggle_mode,
-				),
-				ft.Button(
-					"room",
-					on_click=change_room,
 				),
 				ft.Button(
 					"info",
