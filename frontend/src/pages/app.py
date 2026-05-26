@@ -1,13 +1,26 @@
 import asyncio
+import logging
+
 import flet as ft
+
+from components.primitives.empty import Empty
 
 from components.app.room import RoomPane
 from contexts.room import RoomContext, RoomContextValue
+from contexts.user import UserContext
 from state.room_state import RoomState
+
+logger = logging.getLogger(__name__)
 
 
 @ft.component
 def AppPage() -> ft.Control:
+	user_context = ft.use_context(UserContext)
+
+	if user_context.user is None:
+		logger.warning("no user in AppPage — Router should have guarded this")
+		return Empty()
+
 	room_state, _ = ft.use_state(RoomState(rooms=[]))
 
 	open_room = ft.use_callback(
@@ -55,7 +68,24 @@ def AppPage() -> ft.Control:
 		],
 	)
 
-	_ = asyncio.create_task(room_context.refresh())
+	def _refresh() -> None:
+		async def _do_refresh():
+			logger.info(
+				"loading rooms",
+				extra={"user": user_context.user.id if user_context.user else None},
+			)
+			try:
+				await room_context.refresh()
+				logger.info(
+					"rooms loaded",
+					extra={"count": len(room_state.rooms)},
+				)
+			except Exception as e:
+				logger.exception("failed to load rooms")
+
+		asyncio.create_task(_do_refresh())
+
+	ft.use_effect(_refresh, [])
 
 	room_wrapped = RoomContext(
 		value=room_context,

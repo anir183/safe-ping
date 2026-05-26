@@ -1,4 +1,3 @@
-import asyncio
 from typing import override
 
 from models.room import Room
@@ -8,8 +7,6 @@ from repos.rooms import RoomsRepository
 class MockRoomRepository(RoomsRepository):
 	@override
 	async def get_rooms(self) -> list[Room]:
-		await asyncio.sleep(1)
-
 		return [
 			Room(
 				"1",

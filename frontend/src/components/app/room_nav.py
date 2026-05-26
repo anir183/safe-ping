@@ -2,6 +2,10 @@ import asyncio
 
 import flet as ft
 
+import asyncio
+
+import flet as ft
+
 from components.app.room_list import RoomList
 from components.nav_drawer import NavDrawer
 from components.nav_rail import NavRail
@@ -12,8 +16,13 @@ from constants.images import ICON_SM
 from constants.spacing import SPACE_NONE
 from contexts.room import RoomContext
 from contexts.theme import ThemeContext
+from contexts.user import UserContext
 from models.user import User
 from utils.responsive import is_extra_large, is_large, is_medium, is_small
+
+
+def _fallback_user() -> User:
+	return User("0", "Guest", "guest@local", "")
 
 
 @ft.component
@@ -23,8 +32,11 @@ def RoomNav():
 	)
 	room_context = ft.use_context(RoomContext)
 	theme_context = ft.use_context(ThemeContext)
+	user_context = ft.use_context(UserContext)
 
 	ft.use_effect(lambda: asyncio.create_task(room_context.refresh()), [])
+
+	current_user = user_context.user or _fallback_user()
 
 	drawer = NavDrawer(
 		is_dismissible=is_small() or is_medium(),
@@ -47,12 +59,7 @@ def RoomNav():
 			ft.Container(
 				alignment=ft.Alignment.CENTER,
 				content=UserMenuExpanded(
-					User(
-						"0",
-						"anir183",
-						"email",
-						"https://picsum.photos/111",
-					),
+					current_user,
 					is_button=True,
 				),
 			),
@@ -76,14 +83,7 @@ def RoomNav():
 			ft.Divider(),
 			ft.Container(
 				alignment=ft.Alignment.CENTER,
-				content=UserMenuCompact(
-					User(
-						"0",
-						"anir183",
-						"email",
-						"https://picsum.photos/112",
-					),
-				),
+				content=UserMenuCompact(current_user),
 			),
 			ft.Container(height=SPACE_NONE),
 		],

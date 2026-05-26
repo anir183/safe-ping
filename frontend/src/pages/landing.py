@@ -1,7 +1,5 @@
-import flet as ft
-
-from components.util.temp import Temp
+from pages.login import LoginPage
 
 
-def LandingPage() -> ft.Control:
-	return Temp()
+def LandingPage():
+	return LoginPage()
