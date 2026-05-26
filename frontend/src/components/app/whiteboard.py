@@ -1,38 +1,4 @@
-# import flet as ft
-#
-# from components.primitives.empty import Empty
-# from constants.room import ROOM_SECTION_WHITEBOARD
-# from contexts.room import RoomContext
-#
-#
-# @ft.component
-# def WhiteboardPage():
-# 	room_context = ft.use_context(RoomContext)
-#
-# 	if (
-# 		room_context.room is None
-# 		or room_context.open_section != ROOM_SECTION_WHITEBOARD
-# 	):
-# 		return Empty()
-#
-# 	return ft.Container(
-# 		expand=True,
-# 		content=ft.Column(
-# 			expand=True,
-# 			alignment=ft.MainAxisAlignment.CENTER,
-# 			horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-# 			controls=[
-# 				ft.Text(
-# 					room_context.room and room_context.room.name,
-# 					align=ft.Alignment.CENTER,
-# 				),
-# 				ft.Text(
-# 					room_context.open_section,
-# 					align=ft.Alignment.CENTER,
-# 				),
-# 			],
-# 		),
-# 	)
+import asyncio
 
 import flet as ft
 import flet.canvas as cv
@@ -40,11 +6,15 @@ import flet.canvas as cv
 from components.primitives.empty import Empty
 from constants.room import ROOM_SECTION_WHITEBOARD
 from contexts.room import RoomContext
+from models.whiteboard import WhiteboardStroke
+from repos.mock.whiteboard import MockWhiteboardRepository
 
 
 @ft.component
 def WhiteboardPage():
 	room_context = ft.use_context(RoomContext)
+
+	repo, _ = ft.use_state(MockWhiteboardRepository())
 
 	if (
 		room_context.room is None
@@ -58,6 +28,29 @@ def WhiteboardPage():
 	current_stroke, set_current_stroke = ft.use_state(3)
 
 	canvas_ref = ft.Ref[ft.GestureDetector]()
+
+	def load_strokes():
+		async def _load():
+			if room_context.room is None:
+				return
+			strokes = await repo.get_strokes(room_context.room.id)
+			set_paths(
+				[
+					{
+						"points": list(s.points),
+						"color": s.color,
+						"stroke": s.stroke_width,
+					}
+					for s in strokes
+				]
+			)
+
+		_ = asyncio.create_task(_load())
+
+	ft.use_effect(
+		load_strokes,
+		[room_context.room.id if room_context.room else None],
+	)
 
 	def start_draw(e: ft.DragStartEvent):
 		set_current_path(
@@ -76,21 +69,39 @@ def WhiteboardPage():
 
 	def end_draw(_):
 		if len(current_path) > 1:
-			set_paths(
-				paths
-				+ [
-					{
-						"points": current_path,
-						"color": current_color,
-						"stroke": current_stroke,
-					}
-				]
+			new_paths = paths + [
+				{
+					"points": list(current_path),
+					"color": current_color,
+					"stroke": current_stroke,
+				}
+			]
+			set_paths(new_paths)
+			_ = asyncio.create_task(
+				_save_after_draw(new_paths, room_context.room.id)
 			)
 
 		set_current_path([])
 
+	async def _save_after_draw(all_paths, room_id):
+		strokes = [
+			WhiteboardStroke(
+				id=str(i),
+				room_id=room_id,
+				points=list(p["points"]),
+				color=p["color"],
+				stroke_width=p["stroke"],
+			)
+			for i, p in enumerate(all_paths)
+		]
+		await repo.save_strokes(room_id, strokes)
+
 	def clear_board(_):
 		set_paths([])
+		if room_context.room is not None:
+			_ = asyncio.create_task(
+				repo.save_strokes(room_context.room.id, [])
+			)
 
 	def build_lines():
 		lines = []

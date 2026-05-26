@@ -1,39 +1,4 @@
-# import flet as ft
-#
-# from components.primitives.empty import Empty
-# from constants.room import ROOM_SECTION_CHAT
-# from contexts.room import RoomContext
-#
-#
-# @ft.component
-# def ChatPage():
-# 	room_context = ft.use_context(RoomContext)
-#
-# 	if (
-# 		room_context.room is None
-# 		or room_context.open_section != ROOM_SECTION_CHAT
-# 	):
-# 		return Empty()
-#
-# 	return ft.Container(
-# 		expand=True,
-# 		content=ft.Column(
-# 			expand=True,
-# 			alignment=ft.MainAxisAlignment.CENTER,
-# 			horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-# 			controls=[
-# 				ft.Text(
-# 					room_context.room and room_context.room.name,
-# 					align=ft.Alignment.CENTER,
-# 				),
-# 				ft.Text(
-# 					room_context.open_section,
-# 					align=ft.Alignment.CENTER,
-# 				),
-# 			],
-# 		),
-# 	)
-
+import asyncio
 from datetime import datetime
 from typing import Any, cast
 
@@ -42,11 +7,17 @@ import flet as ft
 from components.primitives.empty import Empty
 from constants.room import ROOM_SECTION_CHAT
 from contexts.room import RoomContext
+from models.message import Message
+from repos.mock.messages import MockMessagesRepository
+from repos.mock.user import MockUserRepository
 
 
 @ft.component
 def ChatPage():
 	room_context = ft.use_context(RoomContext)
+
+	repo, _ = ft.use_state(MockMessagesRepository())
+	user_repo, _ = ft.use_state(MockUserRepository())
 
 	if (
 		room_context.room is None
@@ -54,22 +25,48 @@ def ChatPage():
 	):
 		return Empty()
 
-	messages, set_messages = ft.use_state(
-		[
-			{
-				"user": "System",
-				"text": f"Welcome to {room_context.room.name}",
-				"time": datetime.now().strftime("%H:%M"),
-				"self": False,
-			},
-		]
-	)
-
+	messages, set_messages = ft.use_state([])
 	message_text, set_message_text = ft.use_state("")
 
+	def load_room_data():
+		async def _load():
+			if room_context.room is None:
+				return
+			users = await user_repo.get_users()
+			names = {u.id: u.name for u in users}
+			raw = await repo.get_messages(room_context.room.id)
+			display = [
+				{
+					"user": names.get(m.sender_id, m.sender_id),
+					"text": m.content,
+					"time": m.timestamp,
+					"self": False,
+				}
+				for m in raw
+			]
+			set_messages(display)
+
+		_ = asyncio.create_task(_load())
+
+	ft.use_effect(
+		load_room_data,
+		[room_context.room.id if room_context.room else None],
+	)
+
 	def send_message(_=None):
-		if not message_text.strip():
+		if not message_text.strip() or room_context.room is None:
 			return
+
+		now = datetime.now().strftime("%H:%M")
+		new_id = str(int(datetime.now().timestamp() * 1000))
+		msg = Message(
+			id=new_id,
+			room_id=room_context.room.id,
+			sender_id="0",
+			content=message_text.strip(),
+			timestamp=now,
+		)
+		_ = asyncio.create_task(repo.add_message(room_context.room.id, msg))
 
 		set_messages(
 			messages
@@ -77,12 +74,11 @@ def ChatPage():
 				{
 					"user": "You",
 					"text": message_text.strip(),
-					"time": datetime.now().strftime("%H:%M"),
+					"time": now,
 					"self": True,
 				},
 			]
 		)
-
 		set_message_text("")
 
 	def on_message_change(e: ft.ControlEvent):

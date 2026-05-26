@@ -32,7 +32,11 @@ def RoomInfo(repo: UserRepository, compact: bool = False):
 		return Empty()
 
 	async def get_room_members():
-		set_members(await repo.get_users())
+		all_users = await repo.get_users()
+		if room_context.room:
+			set_members(
+				[u for u in all_users if u.id in room_context.room.member_ids]
+			)
 
 	def fetch_members():
 		_ = asyncio.create_task(get_room_members())
