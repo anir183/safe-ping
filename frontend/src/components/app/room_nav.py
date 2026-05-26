@@ -34,7 +34,14 @@ def RoomNav():
 	theme_context = ft.use_context(ThemeContext)
 	user_context = ft.use_context(UserContext)
 
-	ft.use_effect(lambda: asyncio.create_task(room_context.refresh()), [])
+	ft.use_effect(
+		lambda: asyncio.create_task(
+			room_context.refresh(
+				user_context.user.id if user_context.user else None
+			)
+		),
+		[],
+	)
 
 	current_user = user_context.user or _fallback_user()
 

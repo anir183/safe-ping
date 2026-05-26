@@ -21,8 +21,8 @@ class RoomState:
 	open_section: str | None = ROOM_SECTION_CHAT
 	repo: RoomsRepository = MockRoomRepository()
 
-	async def refresh_rooms(self):
-		self.rooms = await self.repo.get_rooms()
+	async def refresh_rooms(self, user_id: str | None = None):
+		self.rooms = await self.repo.get_rooms(user_id=user_id)
 
 	def open_room(self, id: str | None, section: str | None) -> None:
 		room = next(

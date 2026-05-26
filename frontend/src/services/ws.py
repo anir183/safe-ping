@@ -20,17 +20,20 @@ class WsConnection:
 		self._listening = False
 		self._task = None
 		self._room_id: str | None = None
+		self._user_id: str | None = None
 		self._on_init: Callable[[list[dict]], None] | None = None
 		self._on_message: Callable[[dict], None] | None = None
 
 	async def connect(
 		self,
 		room_id: str,
+		user_id: str,
 		on_init: Callable[[list[dict]], None],
 		on_message: Callable[[dict], None],
 		auto_reconnect: bool = True,
 	) -> bool:
 		self._room_id = room_id
+		self._user_id = user_id
 		self._on_init = on_init
 		self._on_message = on_message
 		self._listening = True
@@ -40,8 +43,9 @@ class WsConnection:
 	async def _do_connect(self, auto_reconnect: bool = True) -> bool:
 		try:
 			assert self._room_id is not None
+			assert self._user_id is not None
 			self._ws = await websockets.connect(
-				f"{BACKEND_WS_URL}/ws/{self._room_id}"
+				f"{BACKEND_WS_URL}/ws/{self._room_id}?user_id={self._user_id}"
 			)
 
 			async def listen():

@@ -12,6 +12,15 @@ from models.message import Message
 from repos.mock.messages import MockMessagesRepository
 from repos.mock.user import MockUserRepository
 from services.ws import WsConnection
+from utils.crypto import decrypt as crypto_decrypt
+from utils.crypto import encrypt as crypto_encrypt
+
+
+def _try_decrypt(content: str) -> str:
+	try:
+		return crypto_decrypt(content)
+	except Exception:
+		return content
 
 
 @ft.component
@@ -34,30 +43,30 @@ def ChatPage():
 		{"conn": None, "active": False, "id": 0}
 	)
 
+	current_user = user_context.user
+	current_id = current_user.id if current_user else None
+
+	def _decrypt_display(m: dict) -> dict:
+		return {
+			"user": m.get("sender_name", m.get("sender_id", "Unknown")),
+			"text": _try_decrypt(m.get("content", "")),
+			"time": m.get("timestamp", ""),
+			"self": m.get("sender_id") == current_id,
+		}
+
 	def _handle_ws_init(history: list[dict]) -> None:
-		current_id = user_context.user.id if user_context.user else None
-		display = [
-			{
-				"user": m.get("sender_name", m.get("sender_id", "Unknown")),
-				"text": m["content"],
-				"time": m["timestamp"],
-				"self": m.get("sender_id") == current_id,
-			}
-			for m in history
-		]
-		set_messages(display)
+		if history:
+			display = [_decrypt_display(m) for m in history]
+			set_messages(display)
+		else:
+			_ = asyncio.create_task(_load_from_mock())
+
 		set_ws_state(
 			lambda prev: {**prev, "active": True, "id": len(history)}
 		)
 
 	def _handle_ws_message(msg_data: dict) -> None:
-		current_id = user_context.user.id if user_context.user else None
-		display = {
-			"user": msg_data.get("sender_name", "Unknown"),
-			"text": msg_data["content"],
-			"time": msg_data["timestamp"],
-			"self": msg_data.get("sender_id") == current_id,
-		}
+		display = _decrypt_display(msg_data)
 
 		def append_messages(prev: list) -> list:
 			out = list(prev)
@@ -69,7 +78,6 @@ def ChatPage():
 	async def _load_from_mock() -> None:
 		if room_context.room is None:
 			return
-		current_id = user_context.user.id if user_context.user else None
 		users = await user_repo.get_users()
 		names = {u.id: u.name for u in users}
 		raw = await repo.get_messages(room_context.room.id)
@@ -84,6 +92,11 @@ def ChatPage():
 		]
 		set_messages(display)
 
+	def _member_of(room: Any) -> bool:
+		if current_id is None:
+			return False
+		return current_id == room.owner_id or current_id in room.member_ids
+
 	def setup_room():
 		async def _setup():
 			old_state = ws_state
@@ -96,6 +109,7 @@ def ChatPage():
 			conn = WsConnection()
 			ok = await conn.connect(
 				room_id=room_context.room.id,
+				user_id=current_id or "0",
 				on_init=_handle_ws_init,
 				on_message=_handle_ws_message,
 			)
@@ -124,12 +138,17 @@ def ChatPage():
 		):
 			return
 
+		if not _member_of(room_context.room):
+			return
+
 		now = datetime.now().strftime("%H:%M")
 		new_id = ws_state["id"] + 1
 		set_ws_state({**ws_state, "id": new_id})
 
-		sender_id = user_context.user.id if user_context.user else "0"
-		sender_name = user_context.user.name if user_context.user else "You"
+		sender_id = current_id or "0"
+		sender_name = current_user.name if current_user else "You"
+		raw_content = message_text.strip()
+		encrypted = crypto_encrypt(raw_content) if ws_state["active"] else raw_content
 
 		data = {
 			"type": "message",
@@ -137,13 +156,13 @@ def ChatPage():
 			"room_id": room_context.room.id,
 			"sender_id": sender_id,
 			"sender_name": sender_name,
-			"content": message_text.strip(),
+			"content": encrypted,
 			"timestamp": now,
 		}
 
 		display = {
 			"user": sender_name,
-			"text": data["content"],
+			"text": raw_content,
 			"time": data["timestamp"],
 			"self": True,
 		}
@@ -155,7 +174,7 @@ def ChatPage():
 				id=str(new_id),
 				room_id=room_context.room.id,
 				sender_id=sender_id,
-				content=data["content"],
+				content=raw_content,
 				timestamp=now,
 			)
 			_ = asyncio.create_task(
@@ -241,6 +260,7 @@ def ChatPage():
 							content=ft.Text(
 								backend_status,
 								size=10,
+								color=ft.Colors.BLACK,
 							),
 						),
 					],

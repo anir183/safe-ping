@@ -42,7 +42,7 @@ def AppPage() -> ft.Control:
 	)
 
 	refresh_rooms = ft.use_callback(
-		lambda: room_state.refresh_rooms(),
+		lambda user_id=None: room_state.refresh_rooms(user_id=user_id),
 		dependencies=[
 			room_state.room,
 			room_state.rooms,
@@ -70,12 +70,13 @@ def AppPage() -> ft.Control:
 
 	def _refresh() -> None:
 		async def _do_refresh():
+			uid = user_context.user.id if user_context.user else None
 			logger.info(
 				"loading rooms",
-				extra={"user": user_context.user.id if user_context.user else None},
+				extra={"user": uid},
 			)
 			try:
-				await room_context.refresh()
+				await room_context.refresh(uid)
 				logger.info(
 					"rooms loaded",
 					extra={"count": len(room_state.rooms)},
