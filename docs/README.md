@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> This is the state of the project when the prototype was submitted to the TMSL 
+> Department of I.T.'s internal Project Competition.
+
 # SafePing
 
 A secure workspace and chat application built with Python. The frontend uses Flet (a Flutter-based UI framework for Python) and the backend is a FastAPI WebSocket server.
