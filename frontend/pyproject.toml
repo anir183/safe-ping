@@ -1,6 +1,6 @@
 [project]
 name = "safe-ping"
-version = "0.0.73"
+version = "0.0.74"
 description = "a secure workspace and chat app"
 readme = "docs/README.md"
 requires-python = ">=3.10"
@@ -9,7 +9,7 @@ authors = [
 	{ name = "Arka Bangal", email = "abangal2005@gmail.com" },
 	{ name = "Adrija Kundu", email = "adrijakundu143@gmail.com" },
 	{ name = "Anish Tiwari", email = "anishtiwari.758@gmail.com" },
-	{ name = "Aryan Halwai", email = "aryanhalwai.758@gmail.com" },
+	{ name = "Aryan Halwai", email = "aryanhalwai20131163@gmail.com" },
 ]
 dependencies = [
 	"flet>=0.85.1",
